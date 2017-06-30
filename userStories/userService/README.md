@@ -9,7 +9,8 @@
 *In order to add new users<br>*
 
 :speech_balloon: A user contains an id, a login, a password and a role ("administrator", "client", "advisor")<br>
-Administrator is a user which is created when application is initialized
+
+In order to check whether a user is well created, we need to search users by their id.
 
 ## User Story 2 : updating users
 
