@@ -8,9 +8,13 @@
 *I want to create a user and to assign him a single role<br>*
 *In order to add new users<br>*
 
+*As administror<br>*
+*I want to retrieve a user by its id<br>*
+*In order to see his information<br>*
+
 :speech_balloon: A user contains an id, a login, a password and a role ("administrator", "client", "advisor")<br>
 
-In order to check whether a user is well created, we need to search users by their id.
+Only administrator are able to create and retrieve a user by its id
 
 ## User Story 2 : updating users
 
