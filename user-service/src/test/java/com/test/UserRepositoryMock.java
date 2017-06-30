@@ -13,6 +13,12 @@ public class UserRepositoryMock implements IUserRepository {
     private final List<User> users = new ArrayList<>();
 
     @Override
+    public Optional<User> get(int id) {
+
+        return users.stream().filter(u -> u.getId() == id).findAny();
+    }
+
+    @Override
     public int create(User user) {
 
         int id = users.size() + 1;
@@ -22,8 +28,13 @@ public class UserRepositoryMock implements IUserRepository {
     }
 
     @Override
-    public Optional<User> get(int id) {
+    public void update(int id, User user) {
 
-        return users.stream().filter(u -> u.getId() == id).findAny();
+
+    }
+
+    @Override
+    public void delete(int id) {
+
     }
 }

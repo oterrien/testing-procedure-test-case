@@ -6,7 +6,11 @@ import java.util.Optional;
 
 public interface IUserRepository {
 
+    Optional<User> get(int id);
+
     int create(User user);
 
-    Optional<User> get(int id);
+    void update(int id, User user);
+
+    void delete(int id);
 }

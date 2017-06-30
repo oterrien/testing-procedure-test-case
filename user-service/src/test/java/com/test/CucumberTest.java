@@ -1,7 +1,7 @@
 package com.test;
 
-import com.test.userservice.business.UserServiceWithAuthorization;
 import com.test.userservice.business.UserService;
+import com.test.userservice.business.UserServiceWithAuthorization;
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -39,7 +39,8 @@ public class CucumberTest {
         @Given("I am a user with role '(.*)'")
         public void given_I_am_a_user(User.Role userRole) {
 
-            User user = new User("myLogin");
+            User user = new User();
+            user.setLogin("myLogin");
             user.setPassword("anyPassword");
             user.setRole(userRole);
 
@@ -51,7 +52,8 @@ public class CucumberTest {
         @When("I want to create a user with role '(.*)'")
         public void when_I_want_to_create_a_user_with_a_given_role(User.Role userRole) {
 
-            User user = new User("userLogin");
+            User user = new User();
+            user.setLogin("anyLogin");
             user.setPassword("anyPassword");
             user.setRole(userRole);
 
