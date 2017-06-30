@@ -19,7 +19,7 @@ Only administrator are able to create and retrieve a user by its id
 ## User Story 2 : updating users
 
 *As administror<br>*
-*I want to update a user<br>*
+*I want to update any information of a user<br>*
 *In order to let the database up to date<br>*
 
 *As a client or an advisor<br>*
