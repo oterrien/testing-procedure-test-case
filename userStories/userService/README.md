@@ -20,7 +20,7 @@ Only administrator are able to create and retrieve a user by its id
 
 *As administror<br>*
 *I want to update any information of a user<br>*
-*In order to let the database up to date<br>*
+*In order to let the repository up to date<br>*
 
 *As a client or an advisor<br>*
 *I want to update my password<br>*
@@ -30,7 +30,7 @@ Only administrator are able to create and retrieve a user by its id
 
 *As administror<br>*
 *I want to remove a user<br>*
-*In order to clean up database<br>*
+*In order to clean up repository<br>*
 
 ## User Story 4 : checking password
 
