@@ -2,6 +2,7 @@ package com.test;
 
 import com.test.userservice.spi.IUserRepository;
 import lombok.RequiredArgsConstructor;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,19 +23,25 @@ public class UserRepositoryMock implements IUserRepository {
     public int create(User user) {
 
         int id = users.size() + 1;
-        user.setId(id);
-        users.add(user);
+
+        User clonedUser = new User();
+        clonedUser.setId(id);
+        clonedUser.setLogin(user.getLogin());
+        clonedUser.setPassword(user.getPassword());
+        clonedUser.setRole(user.getRole());
+
+        users.add(clonedUser);
         return id;
     }
 
     @Override
     public void update(int id, User user) {
 
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void delete(int id) {
-
+        throw new NotImplementedException();
     }
 }

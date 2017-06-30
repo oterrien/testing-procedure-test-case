@@ -131,7 +131,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void a_user_should_be_able_to_update_its_password() {
+    public void a_user_should_be_able_to_update_its_password() throws Exception{
 
         User admin = new User();
         admin.setLogin("anAdmin");
@@ -147,15 +147,16 @@ public class UserServiceTest {
 
         int id = userService.create(client);
 
+        client = userService.get(id).get();
+
         userService = new UserServiceWithAuthorization(this.userService, client);
 
         userService.resetPassword(id, "newPassword");
 
         userService = new UserServiceWithAuthorization(this.userService, admin);
 
-        Optional<User> client1 = userService.get(id);
+        client = userService.get(id).get();
 
-        Assertions.assertThat(client1).isPresent();
-        Assertions.assertThat(client1.get().getPassword()).isEqualTo("newPassword");
+        Assertions.assertThat(client.getPassword()).isEqualTo("newPassword");
     }
 }
