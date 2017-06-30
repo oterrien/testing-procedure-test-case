@@ -1,12 +1,13 @@
-package com.test.userservice;
+package com.test.userservice.business;
 
 import com.test.User;
+import com.test.userservice.api.IUserService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class AuthorizationService implements IUserService {
+public class UserServiceWithAuthorization implements IUserService {
 
     private final UserService userService;
     private final User currentUser;

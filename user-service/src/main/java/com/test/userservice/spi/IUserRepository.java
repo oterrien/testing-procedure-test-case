@@ -1,10 +1,10 @@
-package com.test.userservice;
+package com.test.userservice.spi;
 
 import com.test.User;
 
 import java.util.Optional;
 
-public interface IUserService {
+public interface IUserRepository {
 
     int create(User user);
 

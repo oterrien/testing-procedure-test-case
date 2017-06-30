@@ -1,7 +1,7 @@
 package com.test;
 
-import com.test.userservice.AuthorizationService;
-import com.test.userservice.UserService;
+import com.test.userservice.business.UserServiceWithAuthorization;
+import com.test.userservice.business.UserService;
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -23,7 +23,7 @@ public class CucumberTest {
 
         private Map<String, Object> context = new HashMap<>();
 
-        private AuthorizationService userService;
+        private UserServiceWithAuthorization userService;
 
         @Before
         public void setUp() {
@@ -43,7 +43,7 @@ public class CucumberTest {
             user.setPassword("anyPassword");
             user.setRole(userRole);
 
-            userService = new AuthorizationService(new UserService(new UserRepositoryMock()), user);
+            userService = new UserServiceWithAuthorization(new UserService(new UserRepositoryMock()), user);
         }
         //endregion
 
@@ -74,7 +74,7 @@ public class CucumberTest {
 
             Assertions.assertThat(context.get("EXCEPTION")).isNotNull();
             Exception e = (Exception) context.get("EXCEPTION");
-            Assertions.assertThat(e).isInstanceOf(AuthorizationService.NotAuthorizedException.class);
+            Assertions.assertThat(e).isInstanceOf(UserServiceWithAuthorization.NotAuthorizedException.class);
         }
 
         @Then("the user is created")

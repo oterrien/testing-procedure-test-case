@@ -1,6 +1,8 @@
 package com.test;
 
-import com.test.userservice.*;
+import com.test.userservice.api.IUserService;
+import com.test.userservice.business.UserServiceWithAuthorization;
+import com.test.userservice.business.UserService;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
@@ -34,7 +36,7 @@ public class UserServiceTest {
         admin.setPassword("aPassword");
         admin.setRole(ADMIN);
 
-        IUserService userService = new AuthorizationService(new UserService(new UserRepositoryMock()), admin);
+        IUserService userService = new UserServiceWithAuthorization(new UserService(new UserRepositoryMock()), admin);
 
         User user = new User("newUser");
         user.setPassword("aPassword");
@@ -47,14 +49,14 @@ public class UserServiceTest {
         Assertions.assertThat(user1).isPresent();
     }
 
-    @Test(expected = AuthorizationService.NotAuthorizedException.class)
+    @Test(expected = UserServiceWithAuthorization.NotAuthorizedException.class)
     public void an_non_administrator_should_not_be_able_to_create_a_user() {
 
         User client = new User("newUser");
         client.setPassword("aPassword");
         client.setRole(CLIENT);
 
-        IUserService userService = new AuthorizationService(new UserService(new UserRepositoryMock()), client);
+        IUserService userService = new UserServiceWithAuthorization(new UserService(new UserRepositoryMock()), client);
 
         User user = new User("newUser");
         user.setPassword("aPassword");

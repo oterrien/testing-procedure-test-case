@@ -1,6 +1,8 @@
-package com.test.userservice;
+package com.test.userservice.business;
 
 import com.test.User;
+import com.test.userservice.api.IUserService;
+import com.test.userservice.spi.IUserRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;

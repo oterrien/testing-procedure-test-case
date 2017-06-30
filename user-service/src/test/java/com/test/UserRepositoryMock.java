@@ -1,6 +1,6 @@
 package com.test;
 
-import com.test.userservice.IUserRepository;
+import com.test.userservice.spi.IUserRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;

@@ -39,3 +39,9 @@ Moreover, it will be compatible with hexagonal architecture.
 Now it is time to create the cucumber feature in order to test behavior.
 * Admin are able to create and retrieve any user (any role)
 * Non Admin are not able to create nor retrieve a user
+
+### 6. Hexagonal Architecture
+
+* Move IUserService interface into "**api**" package. That is the contract of the hexagon
+* Move IUserRepository interface into "**spi**" package. That is how
+* Move UserService and AuthorizationUserService into business.
