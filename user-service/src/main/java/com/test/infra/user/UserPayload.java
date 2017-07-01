@@ -2,6 +2,7 @@ package com.test.infra.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.test.domain.user.api.IUser;
+import com.test.domain.user.api.UserRole;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -22,6 +23,6 @@ public class UserPayload implements IUser {
 
     @JsonProperty
     @NotNull
-    private Role role;
+    private UserRole role;
 }
 

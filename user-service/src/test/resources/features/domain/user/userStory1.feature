@@ -4,10 +4,6 @@ Feature: creating users
   I want to create a user and to assign him a single role
   In order to add new users
 
-  As administror
-  I want to retrieve a user by its id
-  In order to see his information
-
   Scenario Outline: An admin should be able to create any user
     Given I am a user with role 'ADMIN'
     When I want to create a user with role '<CREATING ROLE>'

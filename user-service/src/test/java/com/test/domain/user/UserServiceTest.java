@@ -1,6 +1,5 @@
 package com.test.domain.user;
 
-import com.test.domain.user.api.IUser;
 import com.test.domain.user.api.IUserService;
 import com.test.domain.user.business.UserService;
 import com.test.domain.user.business.UserServiceWithAuthorization;
@@ -10,8 +9,8 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static com.test.domain.user.api.IUser.Role.ADMIN;
-import static com.test.domain.user.api.IUser.Role.CLIENT;
+import static com.test.domain.user.api.UserRole.ADMIN;
+import static com.test.domain.user.api.UserRole.CLIENT;
 
 public class UserServiceTest {
 
@@ -90,7 +89,6 @@ public class UserServiceTest {
 
         anotherAdmin1 = userService.get(id);
         Assertions.assertThat(anotherAdmin1.get().getPassword()).isEqualTo("newPassword");
-
     }
 
     @Test(expected = UserServiceWithAuthorization.NotAuthorizedException.class)

@@ -1,5 +1,6 @@
 package com.test.domain.user;
 
+import com.test.domain.user.api.UserRole;
 import com.test.domain.user.business.UserService;
 import com.test.domain.user.business.UserServiceWithAuthorization;
 import cucumber.api.CucumberOptions;
@@ -17,7 +18,7 @@ import java.util.Map;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(features = "src/test/resources/features/domain/user")
-public class CucumberTest {
+public class UserCucumberTest {
 
     public static class StepDefinitions {
 
@@ -37,7 +38,7 @@ public class CucumberTest {
 
         //region GIVEN
         @Given("I am a user with role '(.*)'")
-        public void given_I_am_a_user(User.Role userRole) {
+        public void given_I_am_a_user(UserRole userRole) {
 
             User user = new User();
             user.setLogin("myLogin");
@@ -50,7 +51,7 @@ public class CucumberTest {
 
         //region WHEN
         @When("I want to create a user with role '(.*)'")
-        public void when_I_want_to_create_a_user_with_a_given_role(User.Role userRole) {
+        public void when_I_want_to_create_a_user_with_a_given_role(UserRole userRole) {
 
             User user = new User();
             user.setLogin("anyLogin");

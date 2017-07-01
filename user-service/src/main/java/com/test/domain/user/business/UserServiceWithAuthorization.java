@@ -2,6 +2,7 @@ package com.test.domain.user.business;
 
 import com.test.domain.user.api.IUser;
 import com.test.domain.user.api.IUserService;
+import com.test.domain.user.api.UserRole;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
@@ -15,7 +16,7 @@ public class UserServiceWithAuthorization<T extends IUser> implements IUserServi
     @Override
     public Optional<T> get(int id) {
 
-        if (currentUser.getRole() != IUser.Role.ADMIN) {
+        if (currentUser.getRole() != UserRole.ADMIN) {
             throw new NotAuthorizedException("Only admin are able to retrieve user with id " + id);
         }
 
@@ -25,7 +26,7 @@ public class UserServiceWithAuthorization<T extends IUser> implements IUserServi
     @Override
     public int create(T user) {
 
-        if (currentUser.getRole() != IUser.Role.ADMIN) {
+        if (currentUser.getRole() != UserRole.ADMIN) {
             throw new NotAuthorizedException("Only admin are able to create a new user");
         }
 
@@ -34,7 +35,8 @@ public class UserServiceWithAuthorization<T extends IUser> implements IUserServi
 
     @Override
     public void update(int id, T user) {
-        if (currentUser.getRole() != IUser.Role.ADMIN) {
+
+        if (currentUser.getRole() != UserRole.ADMIN) {
             throw new NotAuthorizedException("Only admin are able to update the user with id " + id);
         }
 
@@ -44,7 +46,7 @@ public class UserServiceWithAuthorization<T extends IUser> implements IUserServi
     @Override
     public void delete(int id) {
 
-        if (currentUser.getRole() != IUser.Role.ADMIN) {
+        if (currentUser.getRole() != UserRole.ADMIN) {
             throw new NotAuthorizedException("Only admin are able to delete the user with id " + id);
         }
 

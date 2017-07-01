@@ -1,9 +1,13 @@
 package com.test.infra.user;
 
 import com.test.domain.user.api.IUser;
+import com.test.domain.user.api.UserRole;
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -25,6 +29,6 @@ public class UserEntity implements IUser {
 
     @NotNull
     @Column(name="ROLE")
-    private Role role;
+    private UserRole role;
 }
 

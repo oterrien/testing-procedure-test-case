@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import sun.misc.BASE64Decoder;
 
 import javax.validation.Valid;
 
@@ -20,6 +21,30 @@ public class UserRestController {
 
     @Autowired
     private UserServiceAdapter userService;
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public void login(@RequestHeader("Authorization") String authorization) throws Exception {
+
+        authorization = authorization.replaceAll("Basic ", "");
+        String[] basicAuthorization = new String(new BASE64Decoder().decodeBuffer(authorization)).split(":");
+
+        String login = basicAuthorization[0];
+        String password = basicAuthorization[1];
+
+
+
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public void updatePassword(@RequestParam("newPassword") String newPassword) throws Exception {
+
+
+
+    }
+
+
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
