@@ -8,22 +8,22 @@ import lombok.RequiredArgsConstructor;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class UserService implements IUserService {
+public class UserService<T extends IUser> implements IUserService<T> {
 
-    private final IUserRepository userRepository;
+    private final IUserRepository<T> userRepository;
 
     @Override
-    public Optional<IUser> get(int id) {
+    public Optional<T> get(int id) {
         return userRepository.read(id);
     }
 
     @Override
-    public int create(IUser user) {
+    public int create(T user) {
         return userRepository.create(user);
     }
 
     @Override
-    public void update(int id, IUser user) {
+    public void update(int id, T user) {
         user.setId(id);
         userRepository.update(id, user);
     }

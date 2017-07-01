@@ -15,13 +15,12 @@ import static com.test.domain.user.api.IUser.Role.CLIENT;
 
 public class UserServiceTest {
 
-    private IUserService userService;
-    private IUser admin;
+    private IUserService<User> userService;
+    private User admin;
 
     @Before
     public void setUp() {
-        this.userService = new UserService(new UserRepositoryMock());
-
+        this.userService = new UserService<>(new UserRepositoryMock());
         this.admin = new User();
         this.admin.setLogin("anAdmin");
         this.admin.setPassword("hisPassword");
@@ -34,7 +33,7 @@ public class UserServiceTest {
         int id = this.userService.create(this.admin);
         Assertions.assertThat(id).isPositive();
 
-        Optional<IUser> user1 = this.userService.get(id);
+        Optional<User> user1 = this.userService.get(id);
 
         Assertions.assertThat(user1).isPresent();
         Assertions.assertThat(user1.orElse(null)).isEqualTo(this.admin);
@@ -43,17 +42,17 @@ public class UserServiceTest {
     @Test
     public void an_admin_should_be_able_to_create_any_user() {
 
-        this.userService = new UserServiceWithAuthorization(this.userService, this.admin);
+        IUserService<User> userService = new UserServiceWithAuthorization<>(this.userService, this.admin);
 
-        IUser anotherAdmin = new User();
+        User anotherAdmin = new User();
         anotherAdmin.setLogin("anotherAdmin");
         anotherAdmin.setPassword("hisPassword");
         anotherAdmin.setRole(ADMIN);
 
-        int id = this.userService.create(anotherAdmin);
+        int id = userService.create(anotherAdmin);
         Assertions.assertThat(id).isPositive();
 
-        Optional<IUser> user1 = this.userService.get(id);
+        Optional<User> user1 = this.userService.get(id);
 
         Assertions.assertThat(user1).isPresent();
     }
@@ -61,12 +60,12 @@ public class UserServiceTest {
     @Test(expected = UserServiceWithAuthorization.NotAuthorizedException.class)
     public void a_non_admin_should_not_be_able_to_create_a_user() {
 
-        IUser client = new User();
+        User client = new User();
         client.setLogin("aClient");
         client.setPassword("hisPassword");
         client.setRole(CLIENT);
 
-        this.userService = new UserServiceWithAuthorization(this.userService, client);
+        IUserService<User> userService = new UserServiceWithAuthorization<>(this.userService, client);
 
         userService.create(this.admin);
 
@@ -76,20 +75,20 @@ public class UserServiceTest {
     @Test
     public void an_admin_should_be_able_to_update_a_user() {
 
-        this.userService = new UserServiceWithAuthorization(this.userService, this.admin);
+        IUserService<User> userService = new UserServiceWithAuthorization<>(this.userService, this.admin);
 
-        IUser anotherAdmin = new User();
+        User anotherAdmin = new User();
         anotherAdmin.setLogin("anotherAdmin");
         anotherAdmin.setPassword("hisPassword");
         anotherAdmin.setRole(ADMIN);
 
-        int id = this.userService.create(anotherAdmin);
+        int id = userService.create(anotherAdmin);
 
-        Optional<IUser> anotherAdmin1 = this.userService.get(id);
+        Optional<User> anotherAdmin1 = this.userService.get(id);
         anotherAdmin1.ifPresent(u -> u.setPassword("newPassword"));
-        this.userService.update(id, anotherAdmin1.get());
+        userService.update(id, anotherAdmin1.get());
 
-        anotherAdmin1 = this.userService.get(id);
+        anotherAdmin1 = userService.get(id);
         Assertions.assertThat(anotherAdmin1.get().getPassword()).isEqualTo("newPassword");
 
     }
@@ -97,19 +96,19 @@ public class UserServiceTest {
     @Test(expected = UserServiceWithAuthorization.NotAuthorizedException.class)
     public void a_user_should_not_be_able_to_update_another_user() {
 
-        IUser admin = new User();
+        User admin = new User();
         admin.setLogin("anAdmin");
         admin.setPassword("hisPassword");
         admin.setRole(ADMIN);
 
-        IUserService userService = new UserServiceWithAuthorization(this.userService, admin);
+        IUserService<User> userService = new UserServiceWithAuthorization<>(this.userService, admin);
 
-        IUser client = new User();
+        User client = new User();
         client.setLogin("aClient");
         client.setPassword("hisPassword");
         client.setRole(CLIENT);
 
-        IUser anotherClient = new User();
+        User anotherClient = new User();
         anotherClient.setLogin("anotherClient");
         anotherClient.setPassword("hisPassword");
         anotherClient.setRole(CLIENT);
@@ -117,7 +116,7 @@ public class UserServiceTest {
         userService.create(client);
         int id = userService.create(anotherClient);
 
-        userService = new UserServiceWithAuthorization(this.userService, client);
+        userService = new UserServiceWithAuthorization<>(this.userService, client);
 
         anotherClient.setPassword("newPassword");
 
@@ -129,14 +128,14 @@ public class UserServiceTest {
     @Test
     public void a_user_should_be_able_to_update_its_password() throws Exception {
 
-        IUser admin = new User();
+        User admin = new User();
         admin.setLogin("anAdmin");
         admin.setPassword("hisPassword");
         admin.setRole(ADMIN);
 
-        IUserService userService = new UserServiceWithAuthorization(this.userService, admin);
+        IUserService<User> userService = new UserServiceWithAuthorization<>(this.userService, admin);
 
-        IUser client = new User();
+        User client = new User();
         client.setLogin("aClient");
         client.setPassword("hisPassword");
         client.setRole(CLIENT);
@@ -145,11 +144,11 @@ public class UserServiceTest {
 
         client = userService.get(id).get();
 
-        userService = new UserServiceWithAuthorization(this.userService, client);
+        userService = new UserServiceWithAuthorization<>(this.userService, client);
 
         userService.resetPassword(id, "newPassword");
 
-        userService = new UserServiceWithAuthorization(this.userService, admin);
+        userService = new UserServiceWithAuthorization<>(this.userService, admin);
 
         client = userService.get(id).get();
 

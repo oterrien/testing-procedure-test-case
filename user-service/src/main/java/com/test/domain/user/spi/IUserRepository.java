@@ -4,13 +4,13 @@ import com.test.domain.user.api.IUser;
 
 import java.util.Optional;
 
-public interface IUserRepository {
+public interface IUserRepository<T extends IUser> {
 
-    Optional<IUser> read(int id);
+    Optional<T> read(int id);
 
-    int create(IUser user);
+    int create(T user);
 
-    void update(int id, IUser user);
+    void update(int id, T user);
 
     void delete(int id);
 }

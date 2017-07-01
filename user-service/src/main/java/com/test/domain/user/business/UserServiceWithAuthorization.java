@@ -7,13 +7,13 @@ import lombok.RequiredArgsConstructor;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class UserServiceWithAuthorization implements IUserService {
+public class UserServiceWithAuthorization<T extends IUser> implements IUserService<T> {
 
-    private final IUserService userService;
-    private final IUser currentUser;
+    private final IUserService<T> userService;
+    private final T currentUser;
 
     @Override
-    public Optional<IUser> get(int id) {
+    public Optional<T> get(int id) {
 
         if (currentUser.getRole() != IUser.Role.ADMIN) {
             throw new NotAuthorizedException("Only admin are able to retrieve user with id " + id);
@@ -23,7 +23,7 @@ public class UserServiceWithAuthorization implements IUserService {
     }
 
     @Override
-    public int create(IUser user) {
+    public int create(T user) {
 
         if (currentUser.getRole() != IUser.Role.ADMIN) {
             throw new NotAuthorizedException("Only admin are able to create a new user");
@@ -33,7 +33,7 @@ public class UserServiceWithAuthorization implements IUserService {
     }
 
     @Override
-    public void update(int id, IUser user) {
+    public void update(int id, T user) {
         if (currentUser.getRole() != IUser.Role.ADMIN) {
             throw new NotAuthorizedException("Only admin are able to update the user with id " + id);
         }
