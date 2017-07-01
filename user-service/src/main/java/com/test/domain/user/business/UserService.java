@@ -10,7 +10,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService implements IUserService {
 
-    private final IUserRepository<IUser> userRepository;
+    private final IUserRepository userRepository;
 
     @Override
     public Optional<IUser> get(int id) {

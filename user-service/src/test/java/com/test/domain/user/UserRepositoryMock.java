@@ -14,7 +14,7 @@ public class UserRepositoryMock implements IUserRepository {
     private final Map<Integer, IUser> users = new HashMap<>();
 
     @Override
-    public Optional<IUser> get(int id) {
+    public Optional<IUser> read(int id) {
         return Optional.ofNullable(clone(users.get(id)));
     }
 
