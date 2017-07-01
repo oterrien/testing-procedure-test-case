@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface IUserRepository<T extends IUser> {
 
-    Optional<T> get(int id);
+    Optional<T> read(int id);
 
     int create(T user);
 

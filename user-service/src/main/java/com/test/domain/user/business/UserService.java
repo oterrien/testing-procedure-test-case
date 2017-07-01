@@ -14,7 +14,7 @@ public class UserService implements IUserService {
 
     @Override
     public Optional<IUser> get(int id) {
-        return userRepository.get(id);
+        return userRepository.read(id);
     }
 
     @Override
