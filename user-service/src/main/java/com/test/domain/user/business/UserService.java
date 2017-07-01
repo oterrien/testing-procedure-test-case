@@ -1,8 +1,8 @@
-package com.test.userservice.business;
+package com.test.domain.user.business;
 
-import com.test.User;
-import com.test.userservice.api.IUserService;
-import com.test.userservice.spi.IUserRepository;
+import com.test.domain.user.api.IUser;
+import com.test.domain.user.api.IUserService;
+import com.test.domain.user.spi.IUserRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
@@ -13,17 +13,17 @@ public class UserService implements IUserService {
     private final IUserRepository userRepository;
 
     @Override
-    public Optional<User> get(int id) {
+    public Optional<IUser> get(int id) {
         return userRepository.get(id);
     }
 
     @Override
-    public int create(User user) {
+    public int create(IUser user) {
         return userRepository.create(user);
     }
 
     @Override
-    public void update(int id, User user) {
+    public void update(int id, IUser user) {
         user.setId(id);
         userRepository.update(id, user);
     }

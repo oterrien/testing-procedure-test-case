@@ -1,17 +1,14 @@
-package com.test;
+package com.test.domain.user;
 
+import com.test.domain.user.api.IUser;
 import lombok.Data;
 
 @Data
-public class User {
+public class User implements IUser {
 
     private int id;
     private String login;
     private String password;
     private Role role;
-
-    public enum Role {
-        ADMIN, CLIENT, ADVISOR;
-    }
 }
 

@@ -1,56 +1,59 @@
-package com.test;
+package com.test.domain.user;
 
-import com.test.userservice.api.IUserService;
-import com.test.userservice.business.UserService;
-import com.test.userservice.business.UserServiceWithAuthorization;
+import com.test.domain.user.api.IUser;
+import com.test.domain.user.api.IUserService;
+import com.test.domain.user.business.UserService;
+import com.test.domain.user.business.UserServiceWithAuthorization;
 import org.assertj.core.api.Assertions;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Optional;
 
-import static com.test.User.Role.ADMIN;
-import static com.test.User.Role.CLIENT;
+import static com.test.domain.user.api.IUser.Role.ADMIN;
+import static com.test.domain.user.api.IUser.Role.CLIENT;
 
 public class UserServiceTest {
 
-    private IUserService userService = new UserService(new UserRepositoryMock());
+    private IUserService userService;
+    private IUser admin;
+
+    @Before
+    public void setUp() {
+        this.userService = new UserService(new UserRepositoryMock());
+
+        this.admin = new User();
+        this.admin.setLogin("anAdmin");
+        this.admin.setPassword("hisPassword");
+        this.admin.setRole(ADMIN);
+    }
 
     @Test
     public void a_user_should_be_able_to_be_created() {
 
-        User admin = new User();
-        admin.setLogin("anAdmin");
-        admin.setPassword("hisPassword");
-        admin.setRole(ADMIN);
-
-        int id = userService.create(admin);
+        int id = this.userService.create(this.admin);
         Assertions.assertThat(id).isPositive();
 
-        Optional<User> user1 = userService.get(id);
+        Optional<IUser> user1 = this.userService.get(id);
 
         Assertions.assertThat(user1).isPresent();
-        Assertions.assertThat(user1.orElse(null)).isEqualTo(admin);
+        Assertions.assertThat(user1.orElse(null)).isEqualTo(this.admin);
     }
 
     @Test
     public void an_admin_should_be_able_to_create_any_user() {
 
-        User admin = new User();
-        admin.setLogin("anAdmin");
-        admin.setPassword("hisPassword");
-        admin.setRole(ADMIN);
+        this.userService = new UserServiceWithAuthorization(this.userService, this.admin);
 
-        IUserService userService = new UserServiceWithAuthorization(this.userService, admin);
-
-        User anotherAdmin = new User();
+        IUser anotherAdmin = new User();
         anotherAdmin.setLogin("anotherAdmin");
         anotherAdmin.setPassword("hisPassword");
         anotherAdmin.setRole(ADMIN);
 
-        int id = userService.create(anotherAdmin);
+        int id = this.userService.create(anotherAdmin);
         Assertions.assertThat(id).isPositive();
 
-        Optional<User> user1 = userService.get(id);
+        Optional<IUser> user1 = this.userService.get(id);
 
         Assertions.assertThat(user1).isPresent();
     }
@@ -58,19 +61,14 @@ public class UserServiceTest {
     @Test(expected = UserServiceWithAuthorization.NotAuthorizedException.class)
     public void a_non_admin_should_not_be_able_to_create_a_user() {
 
-        User client = new User();
+        IUser client = new User();
         client.setLogin("aClient");
         client.setPassword("hisPassword");
         client.setRole(CLIENT);
 
-        IUserService userService = new UserServiceWithAuthorization(this.userService, client);
+        this.userService = new UserServiceWithAuthorization(this.userService, client);
 
-        User user = new User();
-        user.setLogin("anAdmin");
-        user.setPassword("hisPassword");
-        user.setRole(ADMIN);
-
-        userService.create(user);
+        userService.create(this.admin);
 
         Assertions.fail("NotAuthorizedException should be raised");
     }
@@ -78,42 +76,40 @@ public class UserServiceTest {
     @Test
     public void an_admin_should_be_able_to_update_a_user() {
 
-        User admin = new User();
-        admin.setLogin("anAdmin");
-        admin.setPassword("hisPassword");
-        admin.setRole(ADMIN);
+        this.userService = new UserServiceWithAuthorization(this.userService, this.admin);
 
-        IUserService userService = new UserServiceWithAuthorization(this.userService, admin);
+        IUser anotherAdmin = new User();
+        anotherAdmin.setLogin("anotherAdmin");
+        anotherAdmin.setPassword("hisPassword");
+        anotherAdmin.setRole(ADMIN);
 
-        User user = new User();
-        user.setLogin("anotherAdmin");
-        user.setPassword("hisPassword");
-        user.setRole(ADMIN);
+        int id = this.userService.create(anotherAdmin);
 
-        int id = userService.create(user);
+        Optional<IUser> anotherAdmin1 = this.userService.get(id);
+        anotherAdmin1.ifPresent(u -> u.setPassword("newPassword"));
+        this.userService.update(id, anotherAdmin1.get());
 
-        Optional<User> user1 = userService.get(id);
-        user1.ifPresent(u -> u.setPassword("newPassword"));
+        anotherAdmin1 = this.userService.get(id);
+        Assertions.assertThat(anotherAdmin1.get().getPassword()).isEqualTo("newPassword");
 
-        userService.update(user.getId(), user1.get());
     }
 
     @Test(expected = UserServiceWithAuthorization.NotAuthorizedException.class)
     public void a_user_should_not_be_able_to_update_another_user() {
 
-        User admin = new User();
+        IUser admin = new User();
         admin.setLogin("anAdmin");
         admin.setPassword("hisPassword");
         admin.setRole(ADMIN);
 
         IUserService userService = new UserServiceWithAuthorization(this.userService, admin);
 
-        User client = new User();
+        IUser client = new User();
         client.setLogin("aClient");
         client.setPassword("hisPassword");
         client.setRole(CLIENT);
 
-        User anotherClient = new User();
+        IUser anotherClient = new User();
         anotherClient.setLogin("anotherClient");
         anotherClient.setPassword("hisPassword");
         anotherClient.setRole(CLIENT);
@@ -131,16 +127,16 @@ public class UserServiceTest {
     }
 
     @Test
-    public void a_user_should_be_able_to_update_its_password() throws Exception{
+    public void a_user_should_be_able_to_update_its_password() throws Exception {
 
-        User admin = new User();
+        IUser admin = new User();
         admin.setLogin("anAdmin");
         admin.setPassword("hisPassword");
         admin.setRole(ADMIN);
 
         IUserService userService = new UserServiceWithAuthorization(this.userService, admin);
 
-        User client = new User();
+        IUser client = new User();
         client.setLogin("aClient");
         client.setPassword("hisPassword");
         client.setRole(CLIENT);

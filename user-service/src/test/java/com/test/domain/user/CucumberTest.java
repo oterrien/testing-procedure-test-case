@@ -1,7 +1,7 @@
-package com.test;
+package com.test.domain.user;
 
-import com.test.userservice.business.UserService;
-import com.test.userservice.business.UserServiceWithAuthorization;
+import com.test.domain.user.business.UserService;
+import com.test.domain.user.business.UserServiceWithAuthorization;
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(features = "src/test/resources/features")
+@CucumberOptions(features = "src/test/resources/features/domain/user")
 public class CucumberTest {
 
     public static class StepDefinitions {
