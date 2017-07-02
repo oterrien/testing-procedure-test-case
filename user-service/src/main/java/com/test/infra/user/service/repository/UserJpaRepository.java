@@ -1,4 +1,4 @@
-package com.test.infra.user.service;
+package com.test.infra.user.service.repository;
 
 import org.springframework.stereotype.Repository;
 

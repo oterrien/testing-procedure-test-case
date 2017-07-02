@@ -1,9 +1,11 @@
-package com.test.infra.user.service;
+package com.test.infra.user.service.businessadapter;
 
 import com.test.domain.user.api.IUserService;
 import com.test.domain.user.business.UserService;
 import com.test.domain.user.business.UserServiceWithAuthorization;
 import com.test.infra.user.authentication.UserSessionProviderService;
+import com.test.infra.user.service.repository.UserEntity;
+import com.test.infra.user.service.repository.UserRepositoryServiceAdapter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;

@@ -1,4 +1,4 @@
-package com.test.infra.user.service;
+package com.test.infra.user.service.repository;
 
 import com.test.domain.user.spi.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ public class UserRepositoryServiceAdapter implements IUserRepository<UserEntity>
     private UserJpaRepository userJpaRepository;
 
     @Override
-    public Optional<UserEntity> read(int id) {
+    public Optional<UserEntity> find(int id) {
         return Optional.ofNullable(userJpaRepository.findOne(id));
     }
 
@@ -33,6 +33,6 @@ public class UserRepositoryServiceAdapter implements IUserRepository<UserEntity>
 
     @Override
     public void delete(int id) {
-        read(id).ifPresent(p -> userJpaRepository.delete(p.getId()));
+        find(id).ifPresent(p -> userJpaRepository.delete(p.getId()));
     }
 }

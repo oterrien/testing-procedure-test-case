@@ -1,6 +1,6 @@
 package com.test.infra.user.rest;
 
-import com.test.infra.user.service.UserEntity;
+import com.test.infra.user.service.repository.UserEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

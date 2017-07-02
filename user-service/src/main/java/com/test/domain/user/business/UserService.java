@@ -14,7 +14,7 @@ public class UserService<T extends IUser> implements IUserService<T> {
 
     @Override
     public Optional<T> get(int id) {
-        return userRepository.read(id);
+        return userRepository.find(id);
     }
 
     @Override

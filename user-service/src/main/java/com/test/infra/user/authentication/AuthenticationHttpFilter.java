@@ -1,8 +1,8 @@
 package com.test.infra.user.authentication;
 
 import com.test.domain.user.business.UserServiceWithAuthorization;
-import com.test.infra.user.service.UserEntity;
-import com.test.infra.user.service.UserJpaRepository;
+import com.test.infra.user.service.repository.UserEntity;
+import com.test.infra.user.service.repository.UserJpaRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

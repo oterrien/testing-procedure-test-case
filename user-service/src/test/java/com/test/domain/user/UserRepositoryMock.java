@@ -1,5 +1,6 @@
 package com.test.domain.user;
 
+import com.test.domain.user.api.UserRole;
 import com.test.domain.user.spi.IUserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -13,8 +14,12 @@ public class UserRepositoryMock implements IUserRepository<User> {
     private final Map<Integer, User> users = new HashMap<>();
 
     @Override
-    public Optional<User> read(int id) {
-        return Optional.ofNullable(clone(users.get(id)));
+    public Optional<User> find(int id) {
+        return Optional.ofNullable(users.get(id)).map(User::clone);
+    }
+
+    public int create(String login, String password, UserRole role) {
+        return create(new User(login, password, role));
     }
 
     @Override
@@ -39,12 +44,7 @@ public class UserRepositoryMock implements IUserRepository<User> {
         users.remove(id);
     }
 
-    private User clone(User user) {
-        User clonedUser = new User();
-        clonedUser.setId(user.getId());
-        clonedUser.setLogin(user.getLogin());
-        clonedUser.setPassword(user.getPassword());
-        clonedUser.setRole(user.getRole());
-        return clonedUser;
+    public void delete() {
+        users.clear();
     }
 }
