@@ -1,25 +1,34 @@
-package com.test.infra.user;
+package com.test.infra.user.service;
 
 import com.test.domain.user.api.IUserService;
 import com.test.domain.user.business.UserService;
+import com.test.domain.user.business.UserServiceWithAuthorization;
+import com.test.infra.user.authentication.UserSessionProviderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Optional;
 
 @Service
-@Scope(scopeName = "request", proxyMode = ScopedProxyMode.TARGET_CLASS) // This bean is instantiated for each new request
+@Scope(scopeName = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
+// This bean is instantiated for each new request
 @Slf4j
 public class UserServiceAdapter implements IUserService<UserEntity> {
 
     private IUserService<UserEntity> userService;
 
-    public UserServiceAdapter(@Autowired UserRepositoryServiceAdapter repositoryServiceAdapter) {
-        log.warn("init UserService");
+    public UserServiceAdapter(@Autowired UserRepositoryServiceAdapter repositoryServiceAdapter, @Autowired UserSessionProviderService<UserEntity> userSessionProviderService) {
+
         userService = new UserService<>(repositoryServiceAdapter);
+        UserEntity currentUser = userSessionProviderService.
+                getUser().
+                orElseThrow(() -> new UserServiceWithAuthorization.NotAuthorizedException("No user in session"));
+
+        userService = new UserServiceWithAuthorization<>(userService, currentUser);
     }
 
     @Override

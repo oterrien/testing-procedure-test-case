@@ -1,9 +1,10 @@
-package com.test.infra.user;
+package com.test.infra.user.rest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.test.domain.user.api.IUser;
 import com.test.domain.user.api.UserRole;
 import lombok.Data;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 
@@ -15,10 +16,12 @@ public class UserPayload implements IUser {
 
     @JsonProperty
     @NotNull
+    @NotEmpty
     private String login;
 
     @JsonProperty
     @NotNull
+    @NotEmpty
     private String password;
 
     @JsonProperty

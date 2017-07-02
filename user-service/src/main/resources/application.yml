@@ -34,3 +34,14 @@ spring:
       path: /h2/console
   error:
     whitelabel.enabled: true
+
+session:
+  timeout: 10
+  chronoUnit: MINUTES
+
+#security:
+#  basic.enabled: true
+#  enable-csrf: false
+#  user:
+#    name: admin
+#    password: password

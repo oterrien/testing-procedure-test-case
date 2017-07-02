@@ -1,4 +1,4 @@
-package com.test.infra.user;
+package com.test.infra.user.service;
 
 import com.test.domain.user.spi.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

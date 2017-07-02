@@ -28,3 +28,8 @@ spring:
       ddl-auto: create-drop
   error:
     whitelabel.enabled: true
+
+
+session:
+  timeout: 1
+  chronoUnit: SECONDS
