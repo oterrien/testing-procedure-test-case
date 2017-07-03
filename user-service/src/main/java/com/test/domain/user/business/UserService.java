@@ -4,6 +4,7 @@ import com.test.domain.user.api.IUser;
 import com.test.domain.user.api.IUserService;
 import com.test.domain.user.spi.IUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.h2.util.StringUtils;
 
 import java.util.Optional;
 
@@ -40,6 +41,13 @@ public class UserService<T extends IUser> implements IUserService<T> {
             u.setPassword(newPassword);
             update(id, u);
         });
+    }
 
+    @Override
+    public boolean isPasswordCorrect(int id, String password) {
+
+        return get(id).
+                map(u -> StringUtils.equals(u.getPassword(), password)).
+                orElse(false);
     }
 }

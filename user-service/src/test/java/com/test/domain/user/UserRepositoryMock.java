@@ -44,7 +44,7 @@ public class UserRepositoryMock implements IUserRepository<User> {
         users.remove(id);
     }
 
-    public void delete() {
+    public void deleteAll() {
         users.clear();
     }
 }

@@ -1,7 +1,7 @@
 package com.test.infra.user.service.businessadapter;
 
 import com.test.domain.user.api.IUserService;
-import com.test.domain.user.business.UserService;
+import com.test.domain.user.api.UserServiceFactory;
 import com.test.domain.user.business.UserServiceWithAuthorization;
 import com.test.infra.user.authentication.UserSessionProviderService;
 import com.test.infra.user.service.repository.UserEntity;
@@ -23,14 +23,13 @@ public class UserServiceAdapter implements IUserService<UserEntity> {
 
     private IUserService<UserEntity> userService;
 
-    public UserServiceAdapter(@Autowired UserRepositoryServiceAdapter repositoryServiceAdapter, @Autowired UserSessionProviderService<UserEntity> userSessionProviderService) {
+    public UserServiceAdapter(@Autowired UserRepositoryServiceAdapter repositoryServiceAdapter,
+                              @Autowired UserSessionProviderService<UserEntity> userSessionProviderService) {
 
-        userService = new UserService<>(repositoryServiceAdapter);
-        UserEntity currentUser = userSessionProviderService.
-                getUser().
+        UserEntity currentUser = userSessionProviderService.getUser().
                 orElseThrow(() -> new UserServiceWithAuthorization.NotAuthorizedException("No user in session"));
 
-        userService = new UserServiceWithAuthorization<>(userService, currentUser);
+        userService = UserServiceFactory.getInstance().createUserService(repositoryServiceAdapter, currentUser);
     }
 
     @Override
@@ -55,6 +54,11 @@ public class UserServiceAdapter implements IUserService<UserEntity> {
 
     @Override
     public void resetPassword(int id, String newPassword) {
+        userService.resetPassword(id, newPassword);
+    }
 
+    @Override
+    public boolean isPasswordCorrect(int id, String password) {
+        return userService.isPasswordCorrect(id, password);
     }
 }

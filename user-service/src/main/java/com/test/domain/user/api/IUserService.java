@@ -13,4 +13,6 @@ public interface IUserService<T extends IUser> {
     void delete(int id);
 
     void resetPassword(int id, String newPassword);
+
+    boolean isPasswordCorrect(int id, String password);
 }

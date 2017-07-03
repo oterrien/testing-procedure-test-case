@@ -1,1 +1,0 @@
-insert into USERS (LOGIN, PASSWORD, "ROLE") values ('admin', 'password', 'ADMIN');

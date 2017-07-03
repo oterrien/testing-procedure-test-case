@@ -16,7 +16,7 @@ public class UserServiceWithAuthorization<T extends IUser> implements IUserServi
     @Override
     public Optional<T> get(int id) {
 
-        if (currentUser.getRole() != UserRole.ADMIN) {
+        if (currentUser.getRole() != UserRole.ADMIN && currentUser.getId() != id) {
             throw new NotAuthorizedException("Only admin are able to retrieve user with id " + id);
         }
 
@@ -61,6 +61,15 @@ public class UserServiceWithAuthorization<T extends IUser> implements IUserServi
         }
 
         userService.resetPassword(id, newPassword);
+    }
+
+    @Override
+    public boolean isPasswordCorrect(int id, String password) {
+        if (currentUser.getId() != id) {
+            throw new NotAuthorizedException("Only user with id " + id + " is able to check his password");
+        }
+
+        return userService.isPasswordCorrect(id, password);
     }
 
     public static class NotAuthorizedException extends RuntimeException {

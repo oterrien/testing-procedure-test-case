@@ -1,6 +1,7 @@
 package com.test.infra.user;
 
 import com.test.Application;
+import com.test.ScenarioContext;
 import com.test.domain.user.api.UserRole;
 import com.test.domain.user.business.UserServiceWithAuthorization;
 import com.test.infra.user.authentication.AuthenticationHttpFilter;
@@ -17,11 +18,8 @@ import cucumber.api.java.en.When;
 import org.assertj.core.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -29,27 +27,21 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import sun.misc.BASE64Encoder;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static com.test.JSonUtils.parseFromJson;
 import static com.test.JSonUtils.serializeToJson;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @ContextConfiguration(classes = Application.class)
-@SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class StepDefinitions {
 
-    private Map<String, Object> context = new HashMap<>();
-
-    @Autowired
-    private WebApplicationContext webApplicationContext;
+    private ScenarioContext scenarioContext = new ScenarioContext();
 
     private MockMvc mockMvc;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private WebApplicationContext webApplicationContext;
 
     @Autowired
     private UserSessionProviderService<UserEntity> userSessionProviderService;
@@ -62,37 +54,31 @@ public class StepDefinitions {
 
     @Before
     public void setUp() throws Exception {
+
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).
                 addFilters(new AuthenticationHttpFilter(userSessionProviderService, sessionProviderService, userJpaRepository)).
                 build();
 
-        ScriptUtils.executeSqlScript(
-                jdbcTemplate.getDataSource().getConnection(),
-                new ClassPathResource("clean_users.sql")
-        );
+        userJpaRepository.deleteAll();
 
-        ScriptUtils.executeSqlScript(
-                jdbcTemplate.getDataSource().getConnection(),
-                new ClassPathResource("add_admin_user.sql")
-        );
+        UserEntity adminUser = new UserEntity();
+        adminUser.setLogin("admin");
+        adminUser.setPassword("password");
+        adminUser.setRole(UserRole.ADMIN);
+        userJpaRepository.save(adminUser);
     }
 
     @After
     public void tearDown() throws Exception {
-        context.clear();
+        scenarioContext.clear();
     }
 
     //region GIVEN
-    @Given("I am '(.*)' user")
+    @Given("I am the '(.*)' user")
     public void given_I_am_a_user(String login) {
 
-        context.put("USER_LOGIN", login);
-    }
-
-    @Given("my password is '(.*)'")
-    public void given_my_password(String password) {
-
-        context.put("USER_PASSWORD", password);
+        UserEntity user = userJpaRepository.findByLogin(login);
+        scenarioContext.put("ME", user);
     }
     //endregion
 
@@ -106,7 +92,9 @@ public class StepDefinitions {
             userPayload.setPassword("anyPassword");
             userPayload.setRole(userRole);
 
-            String myCredentialsInBase64 = new BASE64Encoder().encode((context.get("USER_LOGIN") + ":" + context.get("USER_PASSWORD")).getBytes());
+            UserEntity me = scenarioContext.get("ME", UserEntity.class);
+
+            String myCredentialsInBase64 = new BASE64Encoder().encode((me.getLogin() + ":" + me.getPassword()).getBytes());
 
             MvcResult result = mockMvc.perform(post("/api/v1/users").
                     header("Authorization", "Basic " + myCredentialsInBase64).
@@ -118,10 +106,10 @@ public class StepDefinitions {
 
             UserPayload userPayloadResult = parseFromJson(result.getResponse().getContentAsString(), UserPayload.class);
 
-            context.put("ID", userPayloadResult.getId());
+            scenarioContext.put("CREATED_USER", userPayloadResult);
 
         } catch (UserServiceWithAuthorization.NotAuthorizedException e) {
-            context.put("EXCEPTION", e);
+            scenarioContext.put("EXCEPTION", e);
         }
     }
     //endregion
@@ -130,7 +118,7 @@ public class StepDefinitions {
     @Then("I am not authorized")
     public void then_I_am_not_authorized() {
 
-        Object ex = context.get("EXCEPTION");
+        Object ex = scenarioContext.get("EXCEPTION", Exception.class);
 
         Assertions.assertThat(ex).isNotNull();
         Assertions.assertThat(ex).isInstanceOf(UserServiceWithAuthorization.NotAuthorizedException.class);
@@ -139,11 +127,13 @@ public class StepDefinitions {
     @Then("the user is created")
     public void then_user_is_created() throws Exception {
 
-        Integer id = (Integer) context.get("ID");
+        UserPayload createdUser = scenarioContext.get("CREATED_USER", UserPayload.class);
 
-        String myCredentialsInBase64 = new BASE64Encoder().encode((context.get("USER_LOGIN") + ":" + context.get("USER_PASSWORD")).getBytes());
+        UserEntity me = scenarioContext.get("ME", UserEntity.class);
 
-        MvcResult result = mockMvc.perform(get("/api/v1/users/{id}", id).
+        String myCredentialsInBase64 = new BASE64Encoder().encode((me.getLogin() + ":" + me.getPassword()).getBytes());
+
+        MvcResult result = mockMvc.perform(get("/api/v1/users/{id}", createdUser.getId()).
                 header("Authorization", "Basic " + myCredentialsInBase64).
                 contentType(MediaType.APPLICATION_JSON_VALUE)).
                 andReturn();
@@ -153,8 +143,6 @@ public class StepDefinitions {
         UserPayload payload = parseFromJson(result.getResponse().getContentAsString(), UserPayload.class);
 
         Assertions.assertThat(payload).isNotNull();
-
-
     }
     //endregion
 

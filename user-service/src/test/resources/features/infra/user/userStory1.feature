@@ -1,12 +1,11 @@
 Feature: creating users
 
-  As administrator
-  I want to create a user and to assign him a single role
-  In order to add new users
+  As an admin
+  I want to create users
+  In order to retrieve them in the future
 
   Scenario Outline: An admin should be able to create any user
-    Given I am 'admin' user
-    And my password is 'password'
+    Given I am the 'admin' user
     When I want to create a user with role '<CREATING ROLE>'
     Then the user is created
 
