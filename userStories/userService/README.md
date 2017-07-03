@@ -30,7 +30,7 @@ Now a user should be able to retrieve its own information
 
 *As a user<br>*
 *I want to update my password<br>*
-*In order to ensure my connections<br>*
+*In order to secure my connections<br>*
 
 ## User Story 5 : cleaning users
 
@@ -42,10 +42,4 @@ Now a user should be able to retrieve its own information
 
 *As a user<br>*
 *I want to check my password is correct<br>*
-*In order to ensure my connection<br>*
-
-## User Story 7 : encoding password
-
-*As a user<br>*
-*I want my password is encoded<br>*
-*In order to ensure my connection<br>*
+*In order to be able to change my password or to read my information<br>*
