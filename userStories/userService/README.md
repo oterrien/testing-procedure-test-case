@@ -18,9 +18,7 @@ Only admin are able to create and retrieve a user by its id
 *I want to read only my own information<br>*
 *In order to check them<br>*
 
-:speech_balloon: A user contains an id, a login, a password and a role ("administrator", "client", "advisor")<br>
-
-Only admin are able to create and retrieve a user by its id
+Now a user should be able to retrieve its own information
 
 ## User Story 3 : updating users
 
