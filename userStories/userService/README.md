@@ -5,12 +5,8 @@
 ## User Story 1 : creating users
 
 *As administrator<br>*
-*I want to create a user and to assign him a single role<br>*
-*In order to add new users<br>*
-
-*As administror<br>*
-*I want to retrieve a user by its id<br>*
-*In order to see his information<br>*
+*I want to create a user with a single role<br>*
+*In order to retrieve him in the future<br>*
 
 :speech_balloon: A user contains an id, a login, a password and a role ("administrator", "client", "advisor")<br>
 
