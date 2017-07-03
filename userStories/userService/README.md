@@ -18,18 +18,26 @@ Only administrator are able to create and retrieve a user by its id
 *I want to update any information of a user<br>*
 *In order to let the repository up to date<br>*
 
+## User Story 3 : changing own password
+
 *As a client or an advisor<br>*
 *I want to update my password<br>*
 *In order to ensure my connections<br>*
 
-## User Story 3 : cleaning users
+## User Story 4 : cleaning users
 
 *As administror<br>*
 *I want to remove a user<br>*
 *In order to clean up repository<br>*
 
-## User Story 4 : checking password
+## User Story 5 : checking password
 
 *As a user<br>*
 *I want to check my password is correct<br>*
+*In order to ensure my connection<br>*
+
+## User Story 5 : encoding password
+
+*As a user<br>*
+*I want my password is encoded<br>*
 *In order to ensure my connection<br>*
