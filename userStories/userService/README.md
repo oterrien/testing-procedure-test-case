@@ -4,7 +4,7 @@
 
 ## User Story 1 : creating users
 
-*As administrator<br>*
+*As an administrator<br>*
 *I want to create users<br>*
 *In order to retrieve them in the future<br>*
 
@@ -14,7 +14,7 @@ Only administrator are able to create and retrieve a user by its id
 
 ## User Story 2 : updating users
 
-*As administror<br>*
+*As an administror<br>*
 *I want to update any information of a user<br>*
 *In order to let the repository up to date<br>*
 
@@ -26,7 +26,7 @@ Only administrator are able to create and retrieve a user by its id
 
 ## User Story 4 : cleaning users
 
-*As administror<br>*
+*As an administror<br>*
 *I want to remove a user<br>*
 *In order to clean up repository<br>*
 
