@@ -1,6 +1,6 @@
 package com.test.infra.user.rest;
 
-import com.test.infra.user.service.repository.UserEntity;
+import com.test.infra.user.persistence.UserEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

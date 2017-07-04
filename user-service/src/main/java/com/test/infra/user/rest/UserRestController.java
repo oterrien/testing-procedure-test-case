@@ -1,7 +1,7 @@
 package com.test.infra.user.rest;
 
-import com.test.infra.user.service.repository.UserEntity;
-import com.test.infra.user.service.businessadapter.UserServiceAdapter;
+import com.test.infra.user.persistence.UserEntity;
+import com.test.infra.user.service.UserServiceAdapter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

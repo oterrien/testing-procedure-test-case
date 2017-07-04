@@ -1,4 +1,4 @@
-package com.test.infra.user.service.repository;
+package com.test.infra.user.persistence;
 
 import org.springframework.stereotype.Repository;
 

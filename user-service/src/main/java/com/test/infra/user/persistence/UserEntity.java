@@ -1,4 +1,4 @@
-package com.test.infra.user.service.repository;
+package com.test.infra.user.persistence;
 
 import com.test.domain.user.api.IUser;
 import lombok.Data;

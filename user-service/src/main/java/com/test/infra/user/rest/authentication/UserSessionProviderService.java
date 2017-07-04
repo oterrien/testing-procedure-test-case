@@ -1,4 +1,4 @@
-package com.test.infra.user.authentication;
+package com.test.infra.user.rest.authentication;
 
 import com.test.domain.user.api.IUser;
 import lombok.Getter;
