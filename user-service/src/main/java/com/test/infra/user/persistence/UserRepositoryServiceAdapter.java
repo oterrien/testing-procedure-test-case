@@ -29,8 +29,7 @@ public class UserRepositoryServiceAdapter implements IUserRepository<UserEntity>
     public int create(UserEntity userEntity) {
 
         userEntity.setId(0);
-        userEntity = userJpaRepository.save(userEntity);
-        return userEntity.getId();
+        return userJpaRepository.save(userEntity).getId();
     }
 
     @Override

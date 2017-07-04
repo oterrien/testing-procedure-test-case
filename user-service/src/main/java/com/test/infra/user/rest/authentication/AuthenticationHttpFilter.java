@@ -36,7 +36,7 @@ public class AuthenticationHttpFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        // no need
     }
 
     @Override
@@ -65,10 +65,8 @@ public class AuthenticationHttpFilter implements Filter {
 
         if (!sessionId.isPresent()) {
             sessionId = Optional.ofNullable(httpServletRequest.getHeader("session-token"));
-            if (sessionId.isPresent()) {
-                if (!sessionProviderService.get(sessionId.get()).isPresent()) {
-                    throw new UserServiceWithAuthorization.NotAuthorizedException("Invalid or obsolete 'session-token'");
-                }
+            if (sessionId.isPresent() && !sessionProviderService.get(sessionId.get()).isPresent()) {
+                throw new UserServiceWithAuthorization.NotAuthorizedException("Invalid or obsolete 'session-token'");
             }
         }
 
@@ -83,6 +81,6 @@ public class AuthenticationHttpFilter implements Filter {
 
     @Override
     public void destroy() {
-
+        // no need
     }
 }
