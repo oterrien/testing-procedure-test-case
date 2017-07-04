@@ -1,7 +1,6 @@
 package com.test.domain.user;
 
 import com.test.ScenarioContext;
-import com.test.domain.user.api.UserRole;
 import com.test.domain.user.business.UserService;
 import com.test.domain.user.business.UserServiceWithAuthorization;
 import cucumber.api.java.en.Given;
@@ -12,6 +11,8 @@ import org.junit.After;
 
 import java.lang.reflect.Field;
 import java.util.Optional;
+
+import static com.test.domain.user.api.IUser.Role;
 
 public class StepDefinitions {
 
@@ -29,7 +30,7 @@ public class StepDefinitions {
 
     //region GIVEN
     @Given("I am a user with role '(.*)'")
-    public void given_I_am_a_user_with_role(UserRole userRole) {
+    public void given_I_am_a_user_with_role(Role userRole) {
 
         User user = new User();
         user.setLogin("my" + userRole.name());
@@ -50,7 +51,7 @@ public class StepDefinitions {
     }
 
     @Given("a user with role '(.*)'")
-    public void given_a_user_with_role(UserRole userRole) {
+    public void given_a_user_with_role(Role userRole) {
 
         User user = new User();
         user.setLogin("my" + userRole.name());
@@ -71,7 +72,7 @@ public class StepDefinitions {
 
     //region WHEN
     @When("I want to create a user with role '(.*)'")
-    public void when_I_want_to_create_a_user_with_a_given_role(UserRole userRole) {
+    public void when_I_want_to_create_a_user_with_a_given_role(Role userRole) {
 
         User user = new User();
         user.setLogin("anyLogin");
@@ -95,7 +96,7 @@ public class StepDefinitions {
         reflectField.setAccessible(true);
 
         if (field.equalsIgnoreCase("role")) {
-            reflectField.set(user, UserRole.valueOf(value));
+            reflectField.set(user, Role.valueOf(value));
         } else {
             reflectField.set(user, value);
         }
@@ -216,7 +217,7 @@ public class StepDefinitions {
         Assertions.assertThat(result).isPresent();
     }
 
-    @Then("the user is created")
+    @Then("this user is created")
     public void then_user_is_created() {
 
         Assertions.assertThat(scenarioContext.get("CREATED_ID", Integer.class)).isNotNull();
@@ -234,15 +235,15 @@ public class StepDefinitions {
         Object expected = scenarioContext.get(field);
         Object actual = reflectField.get(user);
 
-        if (expected instanceof UserRole) {
-            expected = ((UserRole) expected).name();
-            actual = ((UserRole) actual).name();
+        if (expected instanceof Role) {
+            expected = ((Role) expected).name();
+            actual = ((Role) actual).name();
         }
 
         Assertions.assertThat(actual).isEqualTo(expected);
     }
 
-    @Then("the user is deleted")
+    @Then("this user is deleted")
     public void then_user_is_deleted() {
 
         Assertions.assertThat(scenarioContext.get("EXCEPTION", Exception.class)).isNull();
@@ -263,7 +264,7 @@ public class StepDefinitions {
         Assertions.assertThat(result.get().getPassword()).isEqualTo(newPassword);
     }
 
-    @Then("the password is (correct|not correct)")
+    @Then("this password is (correct|not correct)")
     public void then_the_status_of_password_is(String notOrNothing) {
 
         Assertions.assertThat(scenarioContext.get("EXCEPTION", Exception.class)).isNull();

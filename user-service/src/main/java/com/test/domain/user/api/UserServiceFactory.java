@@ -13,7 +13,7 @@ public final class UserServiceFactory {
     @Getter
     private static final UserServiceFactory Instance = new UserServiceFactory();
 
-    public <T extends IUser> IUserService<T> createUserService(IUserRepository<T> repository, T user) {
+    public <T extends IUser> IUserService<T> create(IUserRepository<T> repository, T user) {
         return new UserServiceWithAuthorization<>(new UserService<>(repository), user);
     }
 }

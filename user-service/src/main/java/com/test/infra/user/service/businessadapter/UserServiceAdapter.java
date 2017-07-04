@@ -13,6 +13,7 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,12 +30,17 @@ public class UserServiceAdapter implements IUserService<UserEntity> {
         UserEntity currentUser = userSessionProviderService.getUser().
                 orElseThrow(() -> new UserServiceWithAuthorization.NotAuthorizedException("No user in session"));
 
-        userService = UserServiceFactory.getInstance().createUserService(repositoryServiceAdapter, currentUser);
+        userService = UserServiceFactory.getInstance().create(repositoryServiceAdapter, currentUser);
     }
 
     @Override
     public Optional<UserEntity> get(int id) {
         return userService.get(id);
+    }
+
+    @Override
+    public List<UserEntity> getAll() {
+        return userService.getAll();
     }
 
     @Override

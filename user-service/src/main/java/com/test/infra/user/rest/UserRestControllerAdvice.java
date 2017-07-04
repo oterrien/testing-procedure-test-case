@@ -28,6 +28,13 @@ public class UserRestControllerAdvice {
         return new Error(e.getMessage());
     }
 
+    @ExceptionHandler(UserMapperService.NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public Error handleNotFoundException(UserMapperService.NotFoundException e) {
+        return new Error("Entity not found");
+    }
+
     @RequiredArgsConstructor
     private static class Error {
 

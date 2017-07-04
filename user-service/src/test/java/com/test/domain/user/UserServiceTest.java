@@ -8,15 +8,17 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.Optional;
 
-import static com.test.domain.user.api.UserRole.*;
+import static com.test.domain.user.api.IUser.Role;
+
 
 public class UserServiceTest {
 
     private final UserRepositoryMock userRepositoryMock = new UserRepositoryMock();
     private final IUserService<User> userService = new UserService<>(userRepositoryMock);
-    private final User admin = new User("anAdmin", "hisPassword", ADMIN);
+    private final User admin = new User("anAdmin", "hisPassword", Role.ADMIN);
 
     @Before
     public void setUp() {
@@ -48,7 +50,7 @@ public class UserServiceTest {
 
         IUserService<User> userService = new UserServiceWithAuthorization<>(this.userService, this.admin);
 
-        User anotherUser = new User("anotherAdmin", "hisPassword", ADMIN);
+        User anotherUser = new User("anotherAdmin", "hisPassword", Role.ADMIN);
 
         int id = userService.create(anotherUser);
         Assertions.assertThat(id).isPositive();
@@ -62,22 +64,22 @@ public class UserServiceTest {
     @Test(expected = UserServiceWithAuthorization.NotAuthorizedException.class)
     public void a_non_admin_should_not_be_able_to_create_a_user() {
 
-        User client = new User("aClient", "hisPassword", CLIENT);
+        User client = new User("aClient", "hisPassword", Role.CLIENT);
         client.setId(userRepositoryMock.create(client));
 
         IUserService<User> userService = new UserServiceWithAuthorization<>(this.userService, client);
 
-        User anotherUser = new User("anotherAdmin", "hisPassword", ADMIN);
+        User anotherUser = new User("anotherAdmin", "hisPassword", Role.ADMIN);
         userService.create(anotherUser);
 
         Assertions.fail("NotAuthorizedException should be raised");
     }
 
-    //US #1
+    //US #2
     @Test(expected = UserServiceWithAuthorization.NotAuthorizedException.class)
     public void a_non_admin_should_not_be_able_to_read_another_user() {
 
-        User client = new User("aClient", "hisPassword", CLIENT);
+        User client = new User("aClient", "hisPassword", Role.CLIENT);
         client.setId(userRepositoryMock.create(client));
 
         IUserService<User> userService = new UserServiceWithAuthorization<>(this.userService, client);
@@ -87,11 +89,43 @@ public class UserServiceTest {
         Assertions.fail("NotAuthorizedException should be raised");
     }
 
+    @Test(expected = UserServiceWithAuthorization.NotAuthorizedException.class)
+    public void a_non_admin_should_not_be_able_to_read_many_users() {
+
+        User client = new User("aClient", "hisPassword", Role.CLIENT);
+        client.setId(userRepositoryMock.create(client));
+
+        User anotherClient = new User("anotherClient", "hisPassword", Role.CLIENT);
+        anotherClient.setId(userRepositoryMock.create(anotherClient));
+
+        IUserService<User> userService = new UserServiceWithAuthorization<>(this.userService, client);
+
+        userService.getAll();
+
+        Assertions.fail("NotAuthorizedException should be raised");
+    }
+
+    @Test
+    public void an_admin_should_be_able_to_read_many_users() {
+
+        User client = new User("aClient", "hisPassword", Role.CLIENT);
+        client.setId(userRepositoryMock.create(client));
+
+        User anotherClient = new User("anotherClient", "hisPassword", Role.CLIENT);
+        anotherClient.setId(userRepositoryMock.create(anotherClient));
+
+        IUserService<User> userService = new UserServiceWithAuthorization<>(this.userService, this.admin);
+
+        List<User> users = userService.getAll();
+
+        Assertions.assertThat(users).contains(client, anotherClient);
+    }
+
     //US #2
     @Test
     public void a_user_should_be_able_to_read_his_own_information() {
 
-        User client = new User("aClient", "hisPassword", CLIENT);
+        User client = new User("aClient", "hisPassword", Role.CLIENT);
         client.setId(userRepositoryMock.create(client));
 
         IUserService<User> userService = new UserServiceWithAuthorization<>(this.userService, client);
@@ -105,26 +139,26 @@ public class UserServiceTest {
     @Test
     public void an_admin_should_be_able_to_update_any_user() {
 
-        User anotherUser = new User("anotherAdmin", "hisPassword", ADMIN);
+        User anotherUser = new User("anotherAdmin", "hisPassword", Role.ADMIN);
         anotherUser.setId(userRepositoryMock.create(anotherUser));
 
         IUserService<User> userService = new UserServiceWithAuthorization<>(this.userService, this.admin);
 
-        anotherUser.setRole(ADVISOR);
+        anotherUser.setRole(Role.ADVISOR);
         userService.update(anotherUser.getId(), anotherUser);
 
         anotherUser = userRepositoryMock.find(anotherUser.getId()).get();
-        Assertions.assertThat(anotherUser.getRole()).isEqualTo(ADVISOR);
+        Assertions.assertThat(anotherUser.getRole()).isEqualTo(Role.ADVISOR);
     }
 
     //US #3
     @Test(expected = UserServiceWithAuthorization.NotAuthorizedException.class)
     public void a_non_admin_should_not_be_able_to_update_any_user() {
 
-        User client = new User("aClient", "hisPassword", CLIENT);
+        User client = new User("aClient", "hisPassword", Role.CLIENT);
         client.setId(userRepositoryMock.create(client));
 
-        User anotherUser = new User("anotherUser", "hisPassword", ADVISOR);
+        User anotherUser = new User("anotherUser", "hisPassword", Role.ADVISOR);
         anotherUser.setId(userRepositoryMock.create(anotherUser));
 
         IUserService<User> userService = new UserServiceWithAuthorization<>(this.userService, client);
@@ -140,7 +174,7 @@ public class UserServiceTest {
     @Test
     public void a_user_should_be_able_to_update_his_own_password() throws Exception {
 
-        User client = new User("aClient", "hisPassword", CLIENT);
+        User client = new User("aClient", "hisPassword", Role.CLIENT);
         client.setId(userRepositoryMock.create(client));
 
         IUserService<User> userService = new UserServiceWithAuthorization<>(this.userService, client);
@@ -155,10 +189,10 @@ public class UserServiceTest {
     @Test(expected = UserServiceWithAuthorization.NotAuthorizedException.class)
     public void a_user_should_not_be_able_to_update_another_user_password() throws Exception {
 
-        User client = new User("aClient", "hisPassword", CLIENT);
+        User client = new User("aClient", "hisPassword", Role.CLIENT);
         client.setId(userRepositoryMock.create(client));
 
-        User anotherUser = new User("anotherUser", "hisPassword", ADVISOR);
+        User anotherUser = new User("anotherUser", "hisPassword", Role.ADVISOR);
         anotherUser.setId(userRepositoryMock.create(anotherUser));
 
         IUserService<User> userService = new UserServiceWithAuthorization<>(this.userService, client);
@@ -171,7 +205,7 @@ public class UserServiceTest {
     @Test
     public void an_admin_should_be_able_to_delete_any_user() throws Exception {
 
-        User anotherUser = new User("anotherAdmin", "hisPassword", ADMIN);
+        User anotherUser = new User("anotherAdmin", "hisPassword", Role.ADMIN);
         anotherUser.setId(userRepositoryMock.create(anotherUser));
 
         IUserService<User> userService = new UserServiceWithAuthorization<>(this.userService, this.admin);
@@ -184,15 +218,14 @@ public class UserServiceTest {
     @Test(expected = UserServiceWithAuthorization.NotAuthorizedException.class)
     public void a_non_admin_should_not_be_able_to_delete_a_user() throws Exception {
 
-        User client = new User("aClient", "hisPassword", CLIENT);
+        User client = new User("aClient", "hisPassword", Role.CLIENT);
         client.setId(userRepositoryMock.create(client));
 
-        User anotherUser = new User("anotherUser", "hisPassword", ADVISOR);
+        User anotherUser = new User("anotherUser", "hisPassword", Role.ADVISOR);
         anotherUser.setId(userRepositoryMock.create(anotherUser));
 
         IUserService<User> userService = new UserServiceWithAuthorization<>(this.userService, client);
         userService.delete(anotherUser.getId());
-
 
         Assertions.fail("NotAuthorizedException should be raised");
     }
@@ -202,7 +235,7 @@ public class UserServiceTest {
     @Test
     public void a_user_could_check_his_password_is_correct() {
 
-        User client = new User("aClient", "hisPassword", CLIENT);
+        User client = new User("aClient", "hisPassword", Role.CLIENT);
         client.setId(userRepositoryMock.create(client));
 
         IUserService<User> userService = new UserServiceWithAuthorization<>(this.userService, client);
@@ -214,7 +247,7 @@ public class UserServiceTest {
     @Test
     public void when_password_is_incorrect_exception_should_be_thrown() {
 
-        User client = new User("aClient", "hisPassword", CLIENT);
+        User client = new User("aClient", "hisPassword", Role.CLIENT);
         client.setId(userRepositoryMock.create(client));
 
         IUserService<User> userService = new UserServiceWithAuthorization<>(this.userService, client);
@@ -226,10 +259,10 @@ public class UserServiceTest {
     @Test(expected = UserServiceWithAuthorization.NotAuthorizedException.class)
     public void a_user_should_not_be_able_to_check_password_of_another_user() {
 
-        User client = new User("aClient", "hisPassword", CLIENT);
+        User client = new User("aClient", "hisPassword", Role.CLIENT);
         client.setId(userRepositoryMock.create(client));
 
-        User anotherUser = new User("anotherUser", "hisPassword", ADVISOR);
+        User anotherUser = new User("anotherUser", "hisPassword", Role.ADVISOR);
         anotherUser.setId(userRepositoryMock.create(anotherUser));
 
         IUserService<User> userService = new UserServiceWithAuthorization<>(this.userService, client);

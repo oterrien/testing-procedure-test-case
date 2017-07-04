@@ -6,12 +6,12 @@ import com.test.infra.user.service.repository.UserJpaRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import sun.misc.BASE64Decoder;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -50,7 +50,7 @@ public class AuthenticationHttpFilter implements Filter {
         Optional<String> authorization = Optional.ofNullable(httpServletRequest.getHeader("Authorization"));
         if (authorization.isPresent()) {
 
-            String[] baseAuth = new String(new BASE64Decoder().decodeBuffer(authorization.get().replaceAll("Basic ", ""))).split(":");
+            String[] baseAuth = new String(Base64.getDecoder().decode(authorization.get().replaceAll("Basic ", ""))).split(":");
             String login = baseAuth[0];
             String password = baseAuth[1];
 

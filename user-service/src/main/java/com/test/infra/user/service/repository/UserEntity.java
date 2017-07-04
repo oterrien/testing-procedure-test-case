@@ -1,10 +1,10 @@
 package com.test.infra.user.service.repository;
 
 import com.test.domain.user.api.IUser;
-import com.test.domain.user.api.UserRole;
 import lombok.Data;
 
 import javax.persistence.*;
+import static com.test.domain.user.api.IUser.Role;
 
 @Data
 @Entity
@@ -24,6 +24,6 @@ public class UserEntity implements IUser {
 
     @Column(name = "ROLE")
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private Role role;
 }
 

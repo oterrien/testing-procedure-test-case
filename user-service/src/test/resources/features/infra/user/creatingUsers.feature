@@ -1,4 +1,4 @@
-@Business
+@Infra
 Feature: creating users
 
   As an admin
@@ -6,11 +6,11 @@ Feature: creating users
   In order to retrieve them in the future
 
   Scenario: An admin should be able to create any user
-    Given I am a user with role 'ADMIN'
+    Given I am the user 'admin'
     When I want to create a user with role 'CLIENT'
     Then this user is created
 
   Scenario: A non admin should not be able to create a user
-    Given I am a user with role 'CLIENT'
-    When I want to create a user with role 'ADMIN'
+    Given I am the user 'client'
+    When I want to create a user with role 'ADVISOR'
     Then I am not authorized

@@ -1,10 +1,10 @@
 package com.test.domain.user;
 
 import com.test.domain.user.api.IUser;
-import com.test.domain.user.api.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import static com.test.domain.user.api.IUser.Role;
 
 @Data
 @AllArgsConstructor
@@ -14,9 +14,9 @@ public class User implements IUser, Cloneable {
     private int id;
     private String login;
     private String password;
-    private UserRole role;
+    private Role role;
 
-    public User(String login, String password, UserRole role){
+    public User(String login, String password, Role role){
         setLogin(login);
         setPassword(password);
         setRole(role);

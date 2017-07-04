@@ -1,12 +1,15 @@
 package com.test.domain.user;
 
-import com.test.domain.user.api.UserRole;
 import com.test.domain.user.spi.IUserRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.test.domain.user.api.IUser.Role;
 
 @RequiredArgsConstructor
 public class UserRepositoryMock implements IUserRepository<User> {
@@ -18,7 +21,12 @@ public class UserRepositoryMock implements IUserRepository<User> {
         return Optional.ofNullable(users.get(id)).map(User::clone);
     }
 
-    public int create(String login, String password, UserRole role) {
+    @Override
+    public List<User> findAll() {
+        return users.values().stream().map(User::clone).collect(Collectors.toList());
+    }
+
+    public int create(String login, String password, Role role) {
         return create(new User(login, password, role));
     }
 

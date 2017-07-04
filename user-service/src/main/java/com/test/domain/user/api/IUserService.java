@@ -1,10 +1,13 @@
 package com.test.domain.user.api;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface IUserService<T extends IUser> {
 
     Optional<T> get(int id);
+
+    List<T> getAll();
 
     int create(T user);
 

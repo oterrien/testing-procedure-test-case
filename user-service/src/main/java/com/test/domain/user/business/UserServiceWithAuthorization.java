@@ -2,10 +2,12 @@ package com.test.domain.user.business;
 
 import com.test.domain.user.api.IUser;
 import com.test.domain.user.api.IUserService;
-import com.test.domain.user.api.UserRole;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
+
+import static com.test.domain.user.api.IUser.Role;
 
 @RequiredArgsConstructor
 public class UserServiceWithAuthorization<T extends IUser> implements IUserService<T> {
@@ -16,18 +18,29 @@ public class UserServiceWithAuthorization<T extends IUser> implements IUserServi
     @Override
     public Optional<T> get(int id) {
 
-        if (currentUser.getRole() != UserRole.ADMIN && currentUser.getId() != id) {
-            throw new NotAuthorizedException("Only admin are able to retrieve user with id " + id);
+        if (currentUser.getRole() != Role.ADMIN && currentUser.getId() != id) {
+            throw new NotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to retrieve user #" + id);
         }
 
         return userService.get(id);
     }
 
+
+    @Override
+    public List<T> getAll() {
+
+        if (currentUser.getRole() != Role.ADMIN) {
+            throw new NotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to retrieve users");
+        }
+
+        return userService.getAll();
+    }
+
     @Override
     public int create(T user) {
 
-        if (currentUser.getRole() != UserRole.ADMIN) {
-            throw new NotAuthorizedException("Only admin are able to create a new user");
+        if (currentUser.getRole() != Role.ADMIN) {
+            throw new NotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to create a new user");
         }
 
         return userService.create(user);
@@ -36,8 +49,8 @@ public class UserServiceWithAuthorization<T extends IUser> implements IUserServi
     @Override
     public void update(int id, T user) {
 
-        if (currentUser.getRole() != UserRole.ADMIN) {
-            throw new NotAuthorizedException("Only admin are able to update the user with id " + id);
+        if (currentUser.getRole() != Role.ADMIN) {
+            throw new NotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to update the user #" + id);
         }
 
         userService.update(id, user);
@@ -46,8 +59,8 @@ public class UserServiceWithAuthorization<T extends IUser> implements IUserServi
     @Override
     public void delete(int id) {
 
-        if (currentUser.getRole() != UserRole.ADMIN) {
-            throw new NotAuthorizedException("Only admin are able to delete the user with id " + id);
+        if (currentUser.getRole() != Role.ADMIN) {
+            throw new NotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to delete the user #" + id);
         }
 
         userService.delete(id);
@@ -56,8 +69,8 @@ public class UserServiceWithAuthorization<T extends IUser> implements IUserServi
     @Override
     public void resetPassword(int id, String newPassword) {
 
-        if (currentUser.getId() != id) {
-            throw new NotAuthorizedException("Only user with id " + id + " is able to update his password");
+        if (currentUser.getRole() != Role.ADMIN && currentUser.getId() != id) {
+            throw new NotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to reset password of user #" + id);
         }
 
         userService.resetPassword(id, newPassword);
@@ -65,8 +78,9 @@ public class UserServiceWithAuthorization<T extends IUser> implements IUserServi
 
     @Override
     public boolean isPasswordCorrect(int id, String password) {
-        if (currentUser.getId() != id) {
-            throw new NotAuthorizedException("Only user with id " + id + " is able to check his password");
+
+        if (currentUser.getRole() != Role.ADMIN && currentUser.getId() != id) {
+            throw new NotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to check password of user #" + id);
         }
 
         return userService.isPasswordCorrect(id, password);

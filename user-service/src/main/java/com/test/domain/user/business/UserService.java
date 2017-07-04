@@ -6,6 +6,7 @@ import com.test.domain.user.spi.IUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.h2.util.StringUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -16,6 +17,11 @@ public class UserService<T extends IUser> implements IUserService<T> {
     @Override
     public Optional<T> get(int id) {
         return userRepository.find(id);
+    }
+
+    @Override
+    public List<T> getAll() {
+        return userRepository.findAll();
     }
 
     @Override

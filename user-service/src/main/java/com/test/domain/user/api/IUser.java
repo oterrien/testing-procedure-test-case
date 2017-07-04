@@ -14,10 +14,12 @@ public interface IUser {
 
     void setPassword(String password);
 
-    UserRole getRole();
+    Role getRole();
 
-    void setRole(UserRole role);
+    void setRole(Role role);
 
-
+    enum Role {
+        ADMIN, CLIENT, ADVISOR;
+    }
 }
 

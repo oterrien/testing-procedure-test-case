@@ -3,10 +3,19 @@ package com.test.infra.user.rest;
 import com.test.infra.user.service.repository.UserEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserMapperService {
+
+    public List<UserPayload> convert(List<UserEntity> entity) {
+
+        return entity.stream().
+                map(this::convert).
+                collect(Collectors.toList());
+    }
 
     public UserPayload convert(Optional<UserEntity> entity) {
 

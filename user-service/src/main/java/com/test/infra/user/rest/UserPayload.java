@@ -2,14 +2,13 @@ package com.test.infra.user.rest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.test.domain.user.api.IUser;
-import com.test.domain.user.api.UserRole;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 
 @Data
-public class UserPayload implements IUser {
+public class UserPayload {
 
     @JsonProperty
     private int id;
@@ -26,6 +25,6 @@ public class UserPayload implements IUser {
 
     @JsonProperty
     @NotNull
-    private UserRole role;
+    private IUser.Role role;
 }
 

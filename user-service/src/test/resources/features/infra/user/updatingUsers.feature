@@ -1,4 +1,4 @@
-@Business
+@Infra
 Feature: updating users
 
   As an admin
@@ -6,13 +6,13 @@ Feature: updating users
   In order to let the repository up to date
 
   Scenario: An admin should be able to update any user
-    Given I am a user with role 'ADMIN'
-    And a user with role 'ADMIN'
+    Given I am the user 'admin'
+    And the user 'client'
     When I want to set password = 'NEW PASSWORD' for this user
     Then the password or this user is updated
 
   Scenario: A non admin should not be able to update a user
-    Given I am a user with role 'CLIENT'
-    And a user with role 'ADMIN'
+    Given I am the user 'advisor'
+    And the user 'admin'
     When I want to set password = 'NEW PASSWORD' for this user
     Then I am not authorized
