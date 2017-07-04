@@ -1,7 +1,6 @@
 package com.test.infra.user.rest;
 
 import com.test.domain.user.business.UserServiceWithAuthorization;
-import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;

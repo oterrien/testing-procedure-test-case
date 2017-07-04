@@ -4,7 +4,6 @@ import com.test.domain.user.api.IUser;
 import lombok.Data;
 
 import javax.persistence.*;
-import static com.test.domain.user.api.IUser.Role;
 
 @Data
 @Entity

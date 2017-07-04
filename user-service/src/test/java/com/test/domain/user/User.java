@@ -4,7 +4,6 @@ import com.test.domain.user.api.IUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import static com.test.domain.user.api.IUser.Role;
 
 @Data
 @AllArgsConstructor
