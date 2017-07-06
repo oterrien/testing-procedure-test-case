@@ -2,15 +2,18 @@ package com.test.domain.user.spi;
 
 import com.test.domain.user.api.IUser;
 
+import java.util.List;
 import java.util.Optional;
 
-public interface IUserRepository {
+public interface IUserRepository<T extends IUser> {
 
-    Optional<IUser> read(int id);
+    Optional<T> find(int id);
 
-    int create(IUser user);
+    List<T> findAll();
 
-    void update(int id, IUser user);
+    int create(T user);
+
+    void update(int id, T user);
 
     void delete(int id);
 }

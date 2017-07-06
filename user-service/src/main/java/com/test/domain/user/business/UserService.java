@@ -4,26 +4,33 @@ import com.test.domain.user.api.IUser;
 import com.test.domain.user.api.IUserService;
 import com.test.domain.user.spi.IUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.h2.util.StringUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class UserService implements IUserService {
+public class UserService<T extends IUser> implements IUserService<T> {
 
-    private final IUserRepository userRepository;
+    private final IUserRepository<T> userRepository;
 
     @Override
-    public Optional<IUser> get(int id) {
-        return userRepository.read(id);
+    public Optional<T> get(int id) {
+        return userRepository.find(id);
     }
 
     @Override
-    public int create(IUser user) {
+    public List<T> getAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public int create(T user) {
         return userRepository.create(user);
     }
 
     @Override
-    public void update(int id, IUser user) {
+    public void update(int id, T user) {
         user.setId(id);
         userRepository.update(id, user);
     }
@@ -40,6 +47,13 @@ public class UserService implements IUserService {
             u.setPassword(newPassword);
             update(id, u);
         });
+    }
 
+    @Override
+    public boolean isPasswordCorrect(int id, String password) {
+
+        return get(id).
+                map(u -> StringUtils.equals(u.getPassword(), password)).
+                orElse(false);
     }
 }

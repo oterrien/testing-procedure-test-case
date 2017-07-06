@@ -1,25 +1,37 @@
 package com.test.domain.user;
 
-import com.test.domain.user.api.IUser;
 import com.test.domain.user.spi.IUserRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.test.domain.user.api.IUser.Role;
 
 @RequiredArgsConstructor
-public class UserRepositoryMock implements IUserRepository {
+public class UserRepositoryMock implements IUserRepository<User> {
 
-    private final Map<Integer, IUser> users = new HashMap<>();
+    private final Map<Integer, User> users = new HashMap<>();
 
     @Override
-    public Optional<IUser> read(int id) {
-        return Optional.ofNullable(clone(users.get(id)));
+    public Optional<User> find(int id) {
+        return Optional.ofNullable(users.get(id)).map(User::clone);
     }
 
     @Override
-    public int create(IUser user) {
+    public List<User> findAll() {
+        return users.values().stream().map(User::clone).collect(Collectors.toList());
+    }
+
+    public int create(String login, String password, Role role) {
+        return create(new User(login, password, role));
+    }
+
+    @Override
+    public int create(User user) {
 
         int id = users.size() + 1;
         user.setId(id);
@@ -28,7 +40,7 @@ public class UserRepositoryMock implements IUserRepository {
     }
 
     @Override
-    public void update(int id, IUser user) {
+    public void update(int id, User user) {
 
         delete(id);
         user.setId(id);
@@ -40,12 +52,7 @@ public class UserRepositoryMock implements IUserRepository {
         users.remove(id);
     }
 
-    private IUser clone(IUser user) {
-        IUser clonedUser = new User();
-        clonedUser.setId(user.getId());
-        clonedUser.setLogin(user.getLogin());
-        clonedUser.setPassword(user.getPassword());
-        clonedUser.setRole(user.getRole());
-        return clonedUser;
+    public void deleteAll() {
+        users.clear();
     }
 }

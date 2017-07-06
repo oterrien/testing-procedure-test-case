@@ -46,7 +46,7 @@ Now it is time to create the cucumber feature in order to test behavior.
 * Move IUserRepository interface into "**spi**" package. That is how
 * Move UserService and AuthorizationUserService into business.
 
-# UserStory 2: updating users
+# UserStory 2 : updating users
 
 ### 1. Administrator can update any information of any user
 
@@ -55,3 +55,7 @@ This step consist in implementing update method for admin only
 ### 2. Non administrator can only update their password
 
 This step consist in implementing resetPassword method for all user.
+
+# Convert into Micro-Service
+
+https://gist.github.com/thomasdarimont/8d6bc243d3b504439e67d57cb0d0bb72

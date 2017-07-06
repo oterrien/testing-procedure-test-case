@@ -1,16 +1,21 @@
 package com.test.domain.user.api;
 
+import java.util.List;
 import java.util.Optional;
 
-public interface IUserService {
+public interface IUserService<T extends IUser> {
 
-    Optional<IUser> get(int id);
+    Optional<T> get(int id);
 
-    int create(IUser user);
+    List<T> getAll();
 
-    void update(int id, IUser user);
+    int create(T user);
+
+    void update(int id, T user);
 
     void delete(int id);
 
     void resetPassword(int id, String newPassword);
+
+    boolean isPasswordCorrect(int id, String password);
 }
