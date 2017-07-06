@@ -30,7 +30,7 @@ public class StepDefinitions {
 
     //region GIVEN
     @Given("I am a user with role '(.*)'")
-    public void given_I_am_a_user_with_role(Role userRole) {
+    public void givenIAmAUserWithRole(Role userRole) {
 
         User user = new User();
         user.setLogin("my" + userRole.name());
@@ -44,14 +44,14 @@ public class StepDefinitions {
     }
 
     @Given("my password is '(.*)'")
-    public void given_my_password_is(String password) {
+    public void givenMyPasswordIs(String password) {
 
         User me = scenarioContext.get("ME", User.class);
         me.setPassword(password);
     }
 
     @Given("a user with role '(.*)'")
-    public void given_a_user_with_role(Role userRole) {
+    public void givenAUserWithRole(Role userRole) {
 
         User user = new User();
         user.setLogin("my" + userRole.name());
@@ -63,7 +63,7 @@ public class StepDefinitions {
     }
 
     @Given("his password is '(.*)'")
-    public void given_a_user_password_is(String password) {
+    public void givenHisPasswordIs(String password) {
 
         User user = scenarioContext.get("USER", User.class);
         user.setPassword(password);
@@ -72,7 +72,7 @@ public class StepDefinitions {
 
     //region WHEN
     @When("I want to create a user with role '(.*)'")
-    public void when_I_want_to_create_a_user_with_a_given_role(Role userRole) {
+    public void whenIWantToCreateAUserWithAGivenRole(Role userRole) {
 
         User user = new User();
         user.setLogin("anyLogin");
@@ -88,7 +88,7 @@ public class StepDefinitions {
     }
 
     @When("I want to set (.*) = '(.*)' for this user")
-    public void I_want_to_set_field_value_for_this_user(String field, String value) throws Throwable {
+    public void whenIWantToSetAFieldValueForThisUser(String field, String value) throws Throwable {
 
         User user = scenarioContext.get("USER", User.class);
 
@@ -110,7 +110,7 @@ public class StepDefinitions {
     }
 
     @When("I want to read my information")
-    public void I_want_to_read_my_information() throws Throwable {
+    public void whenIWantToReadMyInformation() throws Throwable {
 
         User me = scenarioContext.get("ME", User.class);
 
@@ -123,7 +123,7 @@ public class StepDefinitions {
     }
 
     @When("I want to find this user")
-    public void I_want_to_find_this_user() throws Throwable {
+    public void whenIWantToFindThisUser() throws Throwable {
 
         User me = scenarioContext.get("USER", User.class);
 
@@ -136,7 +136,7 @@ public class StepDefinitions {
     }
 
     @When("I want to delete this user")
-    public void I_want_to_delete_this_user() throws Throwable {
+    public void whenIWantToDeleteThisUser() throws Throwable {
 
         User user = scenarioContext.get("USER", User.class);
 
@@ -148,7 +148,7 @@ public class StepDefinitions {
     }
 
     @When("I want to change my password to '(.*)'")
-    public void I_want_to_change_my_password(String newPassword) throws Throwable {
+    public void whenIWantToChangeMyPasswordTo(String newPassword) throws Throwable {
 
         User me = scenarioContext.get("ME", User.class);
 
@@ -161,7 +161,7 @@ public class StepDefinitions {
     }
 
     @When("I want to change password of this user to '(.*)'")
-    public void I_want_to_change_user_password(String newPassword) throws Throwable {
+    public void whenIWantToChangeUserPasswordTo(String newPassword) throws Throwable {
 
         User user = scenarioContext.get("USER", User.class);
 
@@ -174,7 +174,7 @@ public class StepDefinitions {
     }
 
     @When("I want to check my password is '(.*)'")
-    public void I_want_to_check_my_password(String password) throws Throwable {
+    public void whenIWantToCheckMyPasswordIs(String password) throws Throwable {
 
         User user = scenarioContext.get("ME", User.class);
 
@@ -187,7 +187,7 @@ public class StepDefinitions {
     }
 
     @When("I want to check password of this user is '(.*)'")
-    public void I_want_to_check_user_password(String password) throws Throwable {
+    public void whenIWantToCheckUserPasswordIs(String password) throws Throwable {
 
         User user = scenarioContext.get("USER", User.class);
 
@@ -202,7 +202,7 @@ public class StepDefinitions {
 
     // region THEN
     @Then("I am not authorized")
-    public void then_I_am_not_authorized() {
+    public void thenIAmNotAuthorized() {
 
         Assertions.assertThat(scenarioContext.get("EXCEPTION", Exception.class)).isNotNull();
         Exception e = scenarioContext.get("EXCEPTION", Exception.class);
@@ -210,7 +210,7 @@ public class StepDefinitions {
     }
 
     @Then("my information are available")
-    public void then_I_am_authorized() {
+    public void thenIAmAuthorized() {
 
         Assertions.assertThat(scenarioContext.get("EXCEPTION", Exception.class)).isNull();
         Optional result = scenarioContext.get("ME?", Optional.class);
@@ -218,7 +218,7 @@ public class StepDefinitions {
     }
 
     @Then("this user is created")
-    public void then_user_is_created() {
+    public void thenUserIsCreated() {
 
         Assertions.assertThat(scenarioContext.get("CREATED_ID", Integer.class)).isNotNull();
         int id = scenarioContext.get("CREATED_ID", Integer.class);
@@ -226,7 +226,7 @@ public class StepDefinitions {
     }
 
     @Then("the (.*) or this user is updated")
-    public void then_user_is_updated(String field) throws Throwable {
+    public void thenUserIsUpdated(String field) throws Throwable {
 
         User user = scenarioContext.get("USER", User.class);
         Field reflectField = user.getClass().getDeclaredField(field);
@@ -244,7 +244,7 @@ public class StepDefinitions {
     }
 
     @Then("this user is deleted")
-    public void then_user_is_deleted() {
+    public void thenUserIsDeleted() {
 
         Assertions.assertThat(scenarioContext.get("EXCEPTION", Exception.class)).isNull();
 
@@ -254,7 +254,7 @@ public class StepDefinitions {
     }
 
     @Then("my password is changed")
-    public void my_password_is_changed() {
+    public void thenMyPasswordIsChanged() {
 
         Assertions.assertThat(scenarioContext.get("EXCEPTION", Exception.class)).isNull();
 
@@ -265,7 +265,7 @@ public class StepDefinitions {
     }
 
     @Then("this password is (correct|not correct)")
-    public void then_the_status_of_password_is(String notOrNothing) {
+    public void thenTheStatusOfPasswordIsCorrectOrNot(String notOrNothing) {
 
         Assertions.assertThat(scenarioContext.get("EXCEPTION", Exception.class)).isNull();
 

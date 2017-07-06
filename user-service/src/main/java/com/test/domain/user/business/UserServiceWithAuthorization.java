@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.test.domain.user.api.IUser.Role;
 
@@ -29,11 +30,13 @@ public class UserServiceWithAuthorization<T extends IUser> implements IUserServi
     @Override
     public List<T> getAll() {
 
-        if (currentUser.getRole() != Role.ADMIN) {
-            throw new NotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to retrieve users");
-        }
+        List<T> allUsers = userService.getAll();
 
-        return userService.getAll();
+        if (currentUser.getRole() != Role.ADMIN) {
+            return allUsers.stream().filter(p -> p.getId() == currentUser.getId()).collect(Collectors.toList());
+        } else {
+            return userService.getAll();
+        }
     }
 
     @Override
