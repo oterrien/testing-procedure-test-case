@@ -3,6 +3,7 @@ package com.test.domain.user;
 import com.test.ScenarioContext;
 import com.test.domain.user.business.UserService;
 import com.test.domain.user.business.UserServiceWithAuthorization;
+import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -261,17 +262,29 @@ public class StepDefinitions {
         User user = scenarioContext.get("ME", User.class);
         String newPassword = scenarioContext.get("NEW_PASSWORD", String.class);
         Optional<User> result = repositoryMock.find(user.getId());
+        Assertions.assertThat(result).isPresent();
         Assertions.assertThat(result.get().getPassword()).isEqualTo(newPassword);
     }
 
     @Then("this password is (correct|not correct)")
-    public void thenTheStatusOfPasswordIsCorrectOrNot(String notOrNothing) {
+    public void thenTheStatusOfPasswordIsCorrectOrNot(String correctOrNotCorrect) {
 
         Assertions.assertThat(scenarioContext.get("EXCEPTION", Exception.class)).isNull();
 
-        boolean result = (notOrNothing.equals("correct"));
-        Boolean isCorrect = scenarioContext.get("IS_CORRECT", Boolean.class);
-        Assertions.assertThat(isCorrect).isEqualTo(result);
+        boolean expected;
+        switch (correctOrNotCorrect) {
+            case "correct":
+                expected = true;
+                break;
+            case "not correct":
+                expected = false;
+                break;
+            default:
+                throw new PendingException("not yet implemented");
+        }
+
+        Boolean actual = scenarioContext.get("IS_CORRECT", Boolean.class);
+        Assertions.assertThat(actual).isEqualTo(expected);
     }
     //endregion
 

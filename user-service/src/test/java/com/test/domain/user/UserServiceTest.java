@@ -236,7 +236,7 @@ public class UserServiceTest {
     //US #6
 
     @Test
-    public void a_user_could_check_his_password_is_correct() {
+    public void aUserCouldCheckHisPasswordIsCorrect() {
 
         User client = new User("aClient", "hisPassword", Role.CLIENT);
         client.setId(userRepositoryMock.create(client));
@@ -248,7 +248,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void when_password_is_incorrect_exception_should_be_thrown() {
+    public void aUserCouldCheckHisPasswordIsNotCorrect() {
 
         User client = new User("aClient", "hisPassword", Role.CLIENT);
         client.setId(userRepositoryMock.create(client));
@@ -260,7 +260,7 @@ public class UserServiceTest {
     }
 
     @Test(expected = UserServiceWithAuthorization.NotAuthorizedException.class)
-    public void a_user_should_not_be_able_to_check_password_of_another_user() {
+    public void aUserShouldNotBeAbleToCheckPasswordOfAnotherUser() {
 
         User client = new User("aClient", "hisPassword", Role.CLIENT);
         client.setId(userRepositoryMock.create(client));

@@ -185,7 +185,6 @@ public class StepDefinitions {
             case OK:
             case ACCEPTED:
                 scenarioContext.put("UPDATED_USER_ID", user.getId());
-
                 break;
             default:
                 scenarioContext.put("ERR_STATUS_CODE", httpStatus);
@@ -417,7 +416,6 @@ public class StepDefinitions {
     public void thenMyPasswordShouldBeUpdated() throws Exception {
 
         Integer updatedUserId = scenarioContext.get("UPDATED_USER_ID", Integer.class);
-
 
         Optional<UserPayload> userOpt = findAUserById(updatedUserId);
         if (userOpt.isPresent()) {
