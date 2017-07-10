@@ -5,15 +5,15 @@ import com.test.domain.user.api.IUser;
 import java.util.List;
 import java.util.Optional;
 
-public interface IUserRepository<T extends IUser> {
+public interface IUserRepository<TU extends IUser> {
 
-    Optional<T> find(int id);
+    Optional<TU> find(int id);
 
-    List<T> findAll();
+    List<TU> findAll();
 
-    int create(T user);
+    int create(TU user);
 
-    void update(int id, T user);
+    void update(int id, TU user);
 
     void delete(int id);
 }

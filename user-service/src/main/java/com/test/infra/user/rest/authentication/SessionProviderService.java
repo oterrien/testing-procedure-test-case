@@ -19,9 +19,17 @@ public class SessionProviderService<T extends IUser> {
         sessions = new PassiveExpiringMap<>(Duration.of(sessionTimeout, chronoUnit).toMillis());
     }
 
-    public void put(String sessionId, Optional<T> user) {
+    public void put(String sessionId, T user) {
         synchronized (this) {
-            user.ifPresent(u -> sessions.put(sessionId, u));
+            sessions.put(sessionId, user);
+        }
+    }
+
+    public void renew(String sessionId) {
+        synchronized (this) {
+            T user = sessions.get(sessionId);
+            sessions.remove(sessionId);
+            put(sessionId, user);
         }
     }
 

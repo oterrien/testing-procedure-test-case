@@ -1,4 +1,5 @@
 @Business
+@CheckPassword
 Feature: checking password
 
   As a user

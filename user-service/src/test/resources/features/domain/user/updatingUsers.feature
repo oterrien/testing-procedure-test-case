@@ -1,4 +1,5 @@
 @Business
+@UpdateUser
 Feature: updating users
 
   As an admin
@@ -9,7 +10,7 @@ Feature: updating users
     Given I am a user with role 'ADMIN'
     And a user with role 'ADMIN'
     When I want to set password = 'NEW PASSWORD' for this user
-    Then the password or this user is updated
+    Then the password of this user is updated
 
   Scenario: A non admin should not be able to update a user
     Given I am a user with role 'CLIENT'

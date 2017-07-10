@@ -1,4 +1,5 @@
 @Infra
+@CreateUser
 Feature: creating users
 
   As an admin

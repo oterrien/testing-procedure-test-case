@@ -1,4 +1,5 @@
 @Infra
+@CheckPassword
 Feature: checking password
 
   As a user

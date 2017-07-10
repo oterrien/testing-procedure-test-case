@@ -1,8 +1,10 @@
 package com.test.domain.user;
 
 import com.test.ScenarioContext;
-import com.test.domain.user.business.UserService;
-import com.test.domain.user.business.UserServiceWithAuthorization;
+import com.test.domain.user.api.IPassword;
+import com.test.domain.user.api.IUserService;
+import com.test.domain.user.api.NotAuthorizedException;
+import com.test.domain.user.api.UserServiceFactory;
 import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -19,7 +21,7 @@ public class StepDefinitions {
 
     private ScenarioContext scenarioContext = new ScenarioContext();
 
-    private UserServiceWithAuthorization<User> userService;
+    private IUserService<User> userService;
 
     private UserRepositoryMock repositoryMock = new UserRepositoryMock();
 
@@ -35,11 +37,11 @@ public class StepDefinitions {
 
         User user = new User();
         user.setLogin("my" + userRole.name());
-        user.setPassword("anyPassword");
+        user.setPassword(new User.Password("anyPassword"));
         user.setRole(userRole);
         repositoryMock.create(user);
 
-        userService = new UserServiceWithAuthorization<>(new UserService<>(repositoryMock), user);
+        userService = UserServiceFactory.getInstance().create(repositoryMock, user);
 
         scenarioContext.put("ME", user);
     }
@@ -48,7 +50,7 @@ public class StepDefinitions {
     public void givenMyPasswordIs(String password) {
 
         User me = scenarioContext.get("ME", User.class);
-        me.setPassword(password);
+        me.setPassword(new User.Password(password));
     }
 
     @Given("a user with role '(.*)'")
@@ -56,7 +58,7 @@ public class StepDefinitions {
 
         User user = new User();
         user.setLogin("my" + userRole.name());
-        user.setPassword("anyPassword");
+        user.setPassword(new User.Password("anyPassword"));
         user.setRole(userRole);
         repositoryMock.create(user);
 
@@ -67,7 +69,7 @@ public class StepDefinitions {
     public void givenHisPasswordIs(String password) {
 
         User user = scenarioContext.get("USER", User.class);
-        user.setPassword(password);
+        user.setPassword(new User.Password(password));
     }
     //endregion
 
@@ -77,7 +79,7 @@ public class StepDefinitions {
 
         User user = new User();
         user.setLogin("anyLogin");
-        user.setPassword("anyPassword");
+        user.setPassword(new User.Password("anyPassword"));
         user.setRole(userRole);
 
         try {
@@ -98,6 +100,8 @@ public class StepDefinitions {
 
         if (field.equalsIgnoreCase("role")) {
             reflectField.set(user, Role.valueOf(value));
+        } else if (field.equalsIgnoreCase("password")) {
+            reflectField.set(user, new User.Password(value));
         } else {
             reflectField.set(user, value);
         }
@@ -154,7 +158,7 @@ public class StepDefinitions {
         User me = scenarioContext.get("ME", User.class);
 
         try {
-            userService.resetPassword(me.getId(), newPassword);
+            userService.resetPassword(me.getId(), new User.Password(newPassword));
             scenarioContext.put("NEW_PASSWORD", newPassword);
         } catch (Exception e) {
             scenarioContext.put("EXCEPTION", e);
@@ -167,7 +171,7 @@ public class StepDefinitions {
         User user = scenarioContext.get("USER", User.class);
 
         try {
-            userService.resetPassword(user.getId(), newPassword);
+            userService.resetPassword(user.getId(), new User.Password(newPassword));
             scenarioContext.put("NEW_PASSWORD", newPassword);
         } catch (Exception e) {
             scenarioContext.put("EXCEPTION", e);
@@ -180,7 +184,7 @@ public class StepDefinitions {
         User user = scenarioContext.get("ME", User.class);
 
         try {
-            boolean isCorrect = userService.isPasswordCorrect(user.getId(), password);
+            boolean isCorrect = userService.isPasswordCorrect(user.getId(), new User.Password(password));
             scenarioContext.put("IS_CORRECT", isCorrect);
         } catch (Exception e) {
             scenarioContext.put("EXCEPTION", e);
@@ -193,7 +197,7 @@ public class StepDefinitions {
         User user = scenarioContext.get("USER", User.class);
 
         try {
-            boolean isCorrect = userService.isPasswordCorrect(user.getId(), password);
+            boolean isCorrect = userService.isPasswordCorrect(user.getId(), new User.Password(password));
             scenarioContext.put("IS_CORRECT", isCorrect);
         } catch (Exception e) {
             scenarioContext.put("EXCEPTION", e);
@@ -207,7 +211,7 @@ public class StepDefinitions {
 
         Assertions.assertThat(scenarioContext.get("EXCEPTION", Exception.class)).isNotNull();
         Exception e = scenarioContext.get("EXCEPTION", Exception.class);
-        Assertions.assertThat(e).isInstanceOf(UserServiceWithAuthorization.NotAuthorizedException.class);
+        Assertions.assertThat(e).isInstanceOf(NotAuthorizedException.class);
     }
 
     @Then("my information are available")
@@ -226,17 +230,26 @@ public class StepDefinitions {
         Assertions.assertThat(id).isPositive();
     }
 
-    @Then("the (.*) or this user is updated")
+    @Then("the (.*) of this user is updated")
     public void thenUserIsUpdated(String field) throws Throwable {
 
         User user = scenarioContext.get("USER", User.class);
+
+        user = repositoryMock.find(user.getId()).get();
+
         Field reflectField = user.getClass().getDeclaredField(field);
         reflectField.setAccessible(true);
 
         Object expected = scenarioContext.get(field);
         Object actual = reflectField.get(user);
 
-        if (expected instanceof Role) {
+        if (field.equalsIgnoreCase("password")) {
+            IPassword expectedPassword = new User.Password(expected.toString()).encoded();
+            Assertions.assertThat((IPassword) actual).isEqualByComparingTo(expectedPassword);
+            return;
+        }
+
+        if (field.equalsIgnoreCase("role")) {
             expected = ((Role) expected).name();
             actual = ((Role) actual).name();
         }
@@ -260,10 +273,10 @@ public class StepDefinitions {
         Assertions.assertThat(scenarioContext.get("EXCEPTION", Exception.class)).isNull();
 
         User user = scenarioContext.get("ME", User.class);
-        String newPassword = scenarioContext.get("NEW_PASSWORD", String.class);
+        IPassword newPassword = new User.Password(scenarioContext.get("NEW_PASSWORD", String.class));
         Optional<User> result = repositoryMock.find(user.getId());
         Assertions.assertThat(result).isPresent();
-        Assertions.assertThat(result.get().getPassword()).isEqualTo(newPassword);
+        Assertions.assertThat(result.get().getPassword()).isEqualByComparingTo(newPassword);
     }
 
     @Then("this password is (correct|not correct)")

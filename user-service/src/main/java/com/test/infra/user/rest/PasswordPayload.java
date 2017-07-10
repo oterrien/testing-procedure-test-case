@@ -1,33 +1,27 @@
 package com.test.infra.user.rest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.test.domain.user.api.IUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.hibernate.validator.constraints.NotEmpty;
-
-import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserPayload {
+public class PasswordPayload {
 
     @JsonProperty
-    private int id;
-
-    @JsonProperty
-    @NotNull
+    @NonNull
     @NotEmpty
-    private String login;
+    private String value;
 
     @JsonProperty
-    @NotNull
-    private PasswordPayload password;
+    private boolean encoded;
 
-    @JsonProperty
-    @NotNull
-    private IUser.Role role;
+    public PasswordPayload(String value) {
+        this.value = value;
+        this.encoded = false;
+    }
 }
-

@@ -1,4 +1,5 @@
 @Infra
+@UpdateUser
 Feature: updating users
 
   As an admin

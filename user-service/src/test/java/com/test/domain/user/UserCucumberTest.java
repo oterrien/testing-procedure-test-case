@@ -5,7 +5,7 @@ import cucumber.api.junit.Cucumber;
 import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(features = "src/test/resources/features/domain/user", glue = "com.test.domain.user", tags = {"@Business", "~@Ignore"})
+@CucumberOptions(features = "src/test/resources/features/domain/user", glue = "com.test.domain.user", tags = {"@Business", "~@Ignore"/*, "@CreateUser", "@UpdateUser", "@DeleteUser", "@ReadUser", "@ResetPassword", "@CheckPassword"*/})
 public class UserCucumberTest {
 
 

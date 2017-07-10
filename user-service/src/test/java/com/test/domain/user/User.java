@@ -1,5 +1,6 @@
 package com.test.domain.user;
 
+import com.test.domain.user.api.IPassword;
 import com.test.domain.user.api.IUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,10 +13,10 @@ public class User implements IUser, Cloneable {
 
     private int id;
     private String login;
-    private String password;
+    private IPassword password;
     private Role role;
 
-    public User(String login, String password, Role role){
+    public User(String login, IPassword password, Role role) {
         setLogin(login);
         setPassword(password);
         setRole(role);
@@ -29,5 +30,20 @@ public class User implements IUser, Cloneable {
             throw new RuntimeException(e);
         }
     }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Password implements IPassword {
+
+        private String value;
+        private boolean encoded = false;
+
+        public Password(String value){
+            this.value = value;
+        }
+    }
 }
+
+
 

@@ -43,3 +43,15 @@ Now a user should be able to retrieve its own information
 *As a user<br>*
 *I want to check my password is correct<br>*
 *In order to be able to change my password or to read my information<br>*
+
+## User Story 7 : encrypting password
+
+*As a user<br>*
+*I want my password is encrypted<br>*
+*In order to enhance security<br>*
+
+## User Story 8 : checking password before being able to do anything
+
+*As a user<br>*
+*I want my password is checked<br>*
+*In order to check I have right to perform any action<br>*

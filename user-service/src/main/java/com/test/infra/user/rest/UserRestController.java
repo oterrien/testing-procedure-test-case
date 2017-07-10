@@ -62,15 +62,17 @@ public class UserRestController {
         userService.delete(id);
     }
 
-    @RequestMapping(value = "/{id}/password", method = RequestMethod.PATCH, consumes = MediaType.TEXT_PLAIN_VALUE)
+    @RequestMapping(value = "/{id}/password", method = RequestMethod.PATCH, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public void resetPassword(@PathVariable("id") int id, @RequestBody String newPassword) {
-        userService.resetPassword(id, newPassword);
+    public void resetPassword(@PathVariable("id") int id, @Valid @RequestBody PasswordPayload newPassword) {
+        userService.resetPassword(id, userMapperService.convert(newPassword));
     }
 
-    @RequestMapping(value = "/{id}/password", method = RequestMethod.POST, consumes = MediaType.TEXT_PLAIN_VALUE)
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public boolean checkPassword(@PathVariable("id") int id, @RequestBody String password) {
-        return userService.isPasswordCorrect(id, password);
+    @RequestMapping(value = "/{id}/password", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public boolean checkPassword(@PathVariable("id") int id, @Valid @ModelAttribute PasswordPayload password) {
+        return userService.isPasswordCorrect(id, userMapperService.convert(password));
     }
+
+
 }

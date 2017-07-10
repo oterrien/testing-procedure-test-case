@@ -1,4 +1,5 @@
 @Business
+@ReadUser
 Feature: reading users
 
   As a user

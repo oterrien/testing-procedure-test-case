@@ -1,4 +1,5 @@
 @Business
+@CreateUser
 Feature: creating users
 
   As an admin

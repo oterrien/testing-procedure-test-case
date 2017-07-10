@@ -1,14 +1,18 @@
 package com.test.infra.user.persistence;
 
+import com.test.domain.user.api.IPassword;
 import com.test.domain.user.api.IUser;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
 @Entity
 @Table(name = "USERS")
-public class UserEntity implements IUser {
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserEntity implements IUser, Serializable {
 
     @Id
     @GeneratedValue
@@ -18,11 +22,16 @@ public class UserEntity implements IUser {
     @Column(name = "LOGIN", unique = true)
     private String login;
 
-    @Column(name = "PASSWORD")
-    private String password;
+    @Embedded
+    private PasswordEntity password;
 
     @Column(name = "ROLE")
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Override
+    public void setPassword(IPassword password) {
+        this.password = (PasswordEntity)password;
+    }
 }
 

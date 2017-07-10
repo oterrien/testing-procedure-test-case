@@ -27,13 +27,14 @@ public class UserRepositoryMock implements IUserRepository<User> {
     }
 
     public int create(String login, String password, Role role) {
-        return create(new User(login, password, role));
+        return create(new User(login, new User.Password(password), role));
     }
 
     @Override
     public int create(User user) {
 
         int id = users.size() + 1;
+        user.setPassword(user.getPassword().encoded());
         user.setId(id);
         users.put(id, user);
         return id;
@@ -43,6 +44,7 @@ public class UserRepositoryMock implements IUserRepository<User> {
     public void update(int id, User user) {
 
         delete(id);
+        user.setPassword(user.getPassword().encoded());
         user.setId(id);
         users.put(id, user);
     }

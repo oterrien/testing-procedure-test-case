@@ -1,4 +1,5 @@
 @Business
+@DeleteUser
 Feature: deleting users
 
   As an admin

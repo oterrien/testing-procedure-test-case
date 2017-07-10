@@ -4,8 +4,10 @@ import com.test.Application;
 import com.test.JSonUtils;
 import com.test.ScenarioContext;
 import com.test.domain.user.api.IUser;
+import com.test.infra.user.persistence.PasswordEntity;
 import com.test.infra.user.persistence.UserEntity;
 import com.test.infra.user.persistence.UserJpaRepository;
+import com.test.infra.user.rest.PasswordPayload;
 import com.test.infra.user.rest.UserMapperService;
 import com.test.infra.user.rest.UserPayload;
 import com.test.infra.user.rest.authentication.AuthenticationHttpFilter;
@@ -104,7 +106,7 @@ public class StepDefinitions {
 
         UserPayload userPayload = new UserPayload();
         userPayload.setLogin(UUID.randomUUID().toString());
-        userPayload.setPassword(UUID.randomUUID().toString());
+        userPayload.setPassword(new PasswordPayload(UUID.randomUUID().toString()));
         userPayload.setRole(userRole);
 
         UserEntity me = scenarioContext.get("ME", UserEntity.class);
@@ -191,15 +193,17 @@ public class StepDefinitions {
         }
     }
 
-    private void setFieldValue(String field, String value, Object object) throws Exception {
+    private void setFieldValue(String field, String value, UserEntity user) throws Exception {
 
-        Field reflectField = object.getClass().getDeclaredField(field);
+        Field reflectField = user.getClass().getDeclaredField(field);
         reflectField.setAccessible(true);
 
         if (field.equalsIgnoreCase("role")) {
-            reflectField.set(object, Role.valueOf(value));
+            reflectField.set(user, Role.valueOf(value));
+        } else if (field.equalsIgnoreCase("password")) {
+            reflectField.set(user, new PasswordEntity(value));
         } else {
-            reflectField.set(object, value);
+            reflectField.set(user, value);
         }
 
         scenarioContext.put(field, value);
@@ -247,8 +251,8 @@ public class StepDefinitions {
 
         MvcResult result = mockMvc.perform(patch("/api/v1/users/{id}/password", user.getId()).
                 header("Authorization", generateAuthorizationHeader(me)).
-                content(newPassword).
-                contentType(MediaType.TEXT_PLAIN)).
+                content(JSonUtils.serializeToJson(new PasswordPayload(newPassword))).
+                contentType(MediaType.APPLICATION_JSON_VALUE)).
                 andReturn();
 
         HttpStatus httpStatus = HttpStatus.valueOf(result.getResponse().getStatus());
@@ -259,7 +263,7 @@ public class StepDefinitions {
             case OK:
             case ACCEPTED:
                 scenarioContext.put("UPDATED_USER_ID", me.getId());
-                user.setPassword(newPassword);
+                user.setPassword(userMapperService.convert(new PasswordPayload(newPassword)));
                 break;
             default:
                 scenarioContext.put("ERR_STATUS_CODE", httpStatus);
@@ -283,10 +287,10 @@ public class StepDefinitions {
                 throw new PendingException("not yet implemented");
         }
 
-        MvcResult result = mockMvc.perform(post("/api/v1/users/{id}/password", user.getId()).
+        MvcResult result = mockMvc.perform(get("/api/v1/users/{id}/password", user.getId()).
                 header("Authorization", generateAuthorizationHeader(me)).
-                content(newPassword).
-                contentType(MediaType.TEXT_PLAIN)).
+                param("value", newPassword).
+                param("isEncoded", Boolean.toString(false))).
                 andReturn();
 
         HttpStatus httpStatus = HttpStatus.valueOf(result.getResponse().getStatus());
@@ -380,7 +384,14 @@ public class StepDefinitions {
                 Object expected = scenarioContext.get(field);
                 Object actual = reflectField.get(user);
 
-                if (expected instanceof Role) {
+                if (field.equalsIgnoreCase("password")) {
+                    PasswordPayload expectedPassword = new PasswordPayload(expected.toString());
+                    Assertions.assertThat(userMapperService.convert((PasswordPayload) actual)).
+                            isEqualByComparingTo(userMapperService.convert(expectedPassword));
+                    return;
+                }
+
+                if (field.equalsIgnoreCase("role")) {
                     expected = ((Role) expected).name();
                     actual = ((Role) actual).name();
                 }
@@ -426,9 +437,9 @@ public class StepDefinitions {
                 reflectField.setAccessible(true);
 
                 Object expected = scenarioContext.get("password");
-                Object actual = reflectField.get(user);
+                PasswordPayload actual = (PasswordPayload) reflectField.get(user);
 
-                Assertions.assertThat(actual).isEqualTo(expected);
+                Assertions.assertThat(userMapperService.convert(actual)).isEqualByComparingTo(userMapperService.convert(new PasswordPayload((String) expected)));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -485,7 +496,7 @@ public class StepDefinitions {
     //endregion
 
     private String generateAuthorizationHeader(IUser user) {
-        String myCredentialsInBase64 = new BASE64Encoder().encode((user.getLogin() + ":" + user.getPassword()).getBytes());
+        String myCredentialsInBase64 = new BASE64Encoder().encode((user.getLogin() + ":" + user.getPassword().getValue()).getBytes());
         return "Basic " + myCredentialsInBase64;
     }
 }

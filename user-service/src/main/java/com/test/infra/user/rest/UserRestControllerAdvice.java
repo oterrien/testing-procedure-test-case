@@ -1,6 +1,7 @@
 package com.test.infra.user.rest;
 
-import com.test.domain.user.business.UserServiceWithAuthorization;
+import com.test.domain.user.api.EncodedException;
+import com.test.domain.user.api.NotAuthorizedException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -13,10 +14,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class UserRestControllerAdvice {
 
-    @ExceptionHandler(UserServiceWithAuthorization.NotAuthorizedException.class)
+    @ExceptionHandler(EncodedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ResponseBody
-    public Error handleNotAuthorizedException(UserServiceWithAuthorization.NotAuthorizedException e) {
+    public Error handleEncodedException(EncodedException e) {
+        return new Error(e.getMessage());
+    }
+
+    @ExceptionHandler(NotAuthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public Error handleNotAuthorizedException(NotAuthorizedException e) {
         return new Error(e.getMessage());
     }
 

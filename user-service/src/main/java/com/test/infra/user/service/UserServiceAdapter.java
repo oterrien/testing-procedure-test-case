@@ -1,8 +1,10 @@
 package com.test.infra.user.service;
 
+import com.test.domain.user.api.IPassword;
 import com.test.domain.user.api.IUserService;
+import com.test.domain.user.api.NotAuthorizedException;
 import com.test.domain.user.api.UserServiceFactory;
-import com.test.domain.user.business.UserServiceWithAuthorization;
+import com.test.domain.user.business.UserAuthorizationService;
 import com.test.infra.user.persistence.UserEntity;
 import com.test.infra.user.persistence.UserRepositoryServiceAdapter;
 import com.test.infra.user.rest.authentication.UserSessionProviderService;
@@ -28,7 +30,7 @@ public class UserServiceAdapter implements IUserService<UserEntity> {
                               @Autowired UserSessionProviderService<UserEntity> userSessionProviderService) {
 
         UserEntity currentUser = userSessionProviderService.getUser().
-                orElseThrow(() -> new UserServiceWithAuthorization.NotAuthorizedException("No user in session"));
+                orElseThrow(() -> new NotAuthorizedException("No user in session"));
 
         userService = UserServiceFactory.getInstance().create(repositoryServiceAdapter, currentUser);
     }
@@ -59,12 +61,12 @@ public class UserServiceAdapter implements IUserService<UserEntity> {
     }
 
     @Override
-    public void resetPassword(int id, String newPassword) {
+    public void resetPassword(int id, IPassword newPassword) {
         userService.resetPassword(id, newPassword);
     }
 
     @Override
-    public boolean isPasswordCorrect(int id, String password) {
+    public boolean isPasswordCorrect(int id, IPassword password) {
         return userService.isPasswordCorrect(id, password);
     }
 }

@@ -10,9 +10,9 @@ public interface IUser {
 
     void setLogin(String login);
 
-    String getPassword();
+   IPassword getPassword();
 
-    void setPassword(String password);
+   void setPassword(IPassword password);
 
     Role getRole();
 

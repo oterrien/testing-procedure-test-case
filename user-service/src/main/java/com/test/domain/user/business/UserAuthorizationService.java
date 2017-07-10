@@ -1,8 +1,11 @@
 package com.test.domain.user.business;
 
+import com.test.domain.user.api.IPassword;
 import com.test.domain.user.api.IUser;
 import com.test.domain.user.api.IUserService;
+import com.test.domain.user.api.NotAuthorizedException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +14,8 @@ import java.util.stream.Collectors;
 import static com.test.domain.user.api.IUser.Role;
 
 @RequiredArgsConstructor
-public class UserServiceWithAuthorization<T extends IUser> implements IUserService<T> {
+@Slf4j
+public class UserAuthorizationService<T extends IUser> implements IUserService<T> {
 
     private final IUserService<T> userService;
     private final T currentUser;
@@ -70,7 +74,7 @@ public class UserServiceWithAuthorization<T extends IUser> implements IUserServi
     }
 
     @Override
-    public void resetPassword(int id, String newPassword) {
+    public void resetPassword(int id, IPassword newPassword) {
 
         if (currentUser.getRole() != Role.ADMIN && currentUser.getId() != id) {
             throw new NotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to reset password of user #" + id);
@@ -80,18 +84,12 @@ public class UserServiceWithAuthorization<T extends IUser> implements IUserServi
     }
 
     @Override
-    public boolean isPasswordCorrect(int id, String password) {
+    public boolean isPasswordCorrect(int id, IPassword password) {
 
         if (currentUser.getRole() != Role.ADMIN && currentUser.getId() != id) {
             throw new NotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to check password of user #" + id);
         }
 
         return userService.isPasswordCorrect(id, password);
-    }
-
-    public static class NotAuthorizedException extends RuntimeException {
-        public NotAuthorizedException(String message) {
-            super(message);
-        }
     }
 }

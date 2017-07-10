@@ -1,21 +1,26 @@
 package com.test.domain.user.api;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 import java.util.Optional;
 
-public interface IUserService<T extends IUser> {
+public interface IUserService<TU extends IUser> {
 
-    Optional<T> get(int id);
+    Optional<TU> get(int id);
 
-    List<T> getAll();
+    List<TU> getAll();
 
-    int create(T user);
+    int create(TU user);
 
-    void update(int id, T user);
+    void update(int id, TU user);
 
     void delete(int id);
 
-    void resetPassword(int id, String newPassword);
+    void resetPassword(int id, IPassword newPassword);
 
-    boolean isPasswordCorrect(int id, String password);
+    boolean isPasswordCorrect(int id, IPassword password);
+
 }

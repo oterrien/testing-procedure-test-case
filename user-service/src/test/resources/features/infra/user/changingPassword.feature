@@ -1,4 +1,5 @@
 @Infra
+@ResetPassword
 Feature: changing password
 
   As a client or an advisor
