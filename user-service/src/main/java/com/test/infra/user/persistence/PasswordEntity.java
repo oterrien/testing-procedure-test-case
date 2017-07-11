@@ -14,10 +14,10 @@ import javax.persistence.Embeddable;
 @AllArgsConstructor
 public class PasswordEntity implements IPassword {
 
-    @Column(name = "PASSWORD")
+    @Column(name = "PASSWORD", nullable=false)
     private String value;
 
-    @Column(name = "IS_ENCODED")
+    @Column(name = "IS_ENCODED", nullable=false)
     private Boolean encoded;
 
     public PasswordEntity(String value) {

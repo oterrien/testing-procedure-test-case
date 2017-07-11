@@ -9,6 +9,7 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class SessionProviderService<T extends IUser> {
@@ -17,6 +18,10 @@ public class SessionProviderService<T extends IUser> {
 
     public SessionProviderService(@Value("${session.timeout}") long sessionTimeout, @Value("${session.chronoUnit}") ChronoUnit chronoUnit) {
         sessions = new PassiveExpiringMap<>(Duration.of(sessionTimeout, chronoUnit).toMillis());
+    }
+
+    public String newSessionId(){
+        return UUID.randomUUID().toString();
     }
 
     public void put(String sessionId, T user) {

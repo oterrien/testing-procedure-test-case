@@ -19,13 +19,13 @@ public class UserEntity implements IUser, Serializable {
     @Column(name = "ID")
     private int id;
 
-    @Column(name = "LOGIN", unique = true)
+    @Column(name = "LOGIN", unique = true, nullable=false)
     private String login;
 
     @Embedded
     private PasswordEntity password;
 
-    @Column(name = "ROLE")
+    @Column(name = "ROLE", nullable=false)
     @Enumerated(EnumType.STRING)
     private Role role;
 

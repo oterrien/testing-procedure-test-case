@@ -98,6 +98,12 @@ public class StepDefinitions {
         UserEntity user = userJpaRepository.findByLogin(login);
         scenarioContext.put("USER", user);
     }
+
+    @Given("my credentials are: (.*)/(.*)")
+    public void givenMyCredentials(String login, String password) {
+        scenarioContext.put("LOGIN", login);
+        scenarioContext.put("PASSWORD", password);
+    }
     //endregion
 
     //region WHEN
@@ -130,28 +136,65 @@ public class StepDefinitions {
         }
     }
 
-    @When("I want to read my information")
+    @When("I want to read my information$")
     public void whenIWantToReadMyInformation() throws Exception {
 
+        whenIWantToReadMyInformationWithMyCredentials();
+    }
+
+    @When("I want to read my information with my credentials")
+    public void whenIWantToReadMyInformationWithMyCredentials() throws Exception {
+
         UserEntity me = scenarioContext.get("ME", UserEntity.class);
-        findAUserById(me.getId()).ifPresent(u -> scenarioContext.put("FOUND_ME", u));
+        String login = Optional.ofNullable(scenarioContext.get("LOGIN", String.class)).orElse(me.getLogin());
+        String password = Optional.ofNullable(scenarioContext.get("PASSWORD", String.class)).orElse(me.getPassword().getValue());
+        findAUserByIdAndCredentials(me.getId(), login, password).ifPresent(u -> scenarioContext.put("FOUND_ME", u));
+    }
+
+    @When("I want to read my information with my session token")
+    public void whenIWantToReadMyInformationWithMySessionToken() throws Exception {
+
+        UserEntity me = scenarioContext.get("ME", UserEntity.class);
+        String sessionToken = scenarioContext.get("SESSION_TOKEN", String.class);
+        findAUserByIdAndSessionToken(me.getId(), sessionToken).
+                ifPresent(u -> scenarioContext.put("FOUND_ME", u));
     }
 
     @When("I want to find this user")
     public void whenIWantToFindThisUser() throws Exception {
 
+        UserEntity me = scenarioContext.get("ME", UserEntity.class);
         UserEntity user = scenarioContext.get("USER", UserEntity.class);
-        findAUserById(user.getId()).ifPresent(u -> scenarioContext.put("FOUND_USER", u));
+        findAUserByIdAndCredentials(user.getId(), me.getLogin(), me.getPassword().getValue()).
+                ifPresent(u -> scenarioContext.put("FOUND_USER", u));
     }
 
     private Optional<UserPayload> findAUserById(int id) throws Exception {
-
         UserEntity me = scenarioContext.get("ME", UserEntity.class);
+        return findAUserByIdAndCredentials(id, me.getLogin(), me.getPassword().getValue());
+    }
+
+    private Optional<UserPayload> findAUserByIdAndCredentials(int id, String login, String password) throws Exception {
 
         MvcResult result = mockMvc.perform(get("/api/v1/users/{id}", id).
-                header("Authorization", generateAuthorizationHeader(me)).
+                header("Authorization", generateAuthorizationHeader(login, password)).
                 contentType(MediaType.APPLICATION_JSON_VALUE)).
                 andReturn();
+
+        return readOperation(result);
+    }
+
+    private Optional<UserPayload> findAUserByIdAndSessionToken(int id, String sessionToken) throws Exception {
+
+        MvcResult result = mockMvc.perform(get("/api/v1/users/{id}", id).
+                header("session-token", sessionToken).
+                contentType(MediaType.APPLICATION_JSON_VALUE)).
+                andReturn();
+
+        return readOperation(result);
+    }
+
+    private Optional<UserPayload> readOperation(MvcResult result) throws Exception {
 
         HttpStatus httpStatus = HttpStatus.valueOf(result.getResponse().getStatus());
 
@@ -160,6 +203,7 @@ public class StepDefinitions {
             case ACCEPTED:
                 UserPayload userPayload = parseFromJson(result.getResponse().getContentAsString(), UserPayload.class);
                 scenarioContext.put("FOUND_USER_ID", userPayload.getId());
+                scenarioContext.put("SESSION_TOKEN", result.getResponse().getHeader("session-token"));
                 return Optional.of(userPayload);
             default:
                 scenarioContext.put("ERR_STATUS_CODE", httpStatus);
@@ -496,7 +540,11 @@ public class StepDefinitions {
     //endregion
 
     private String generateAuthorizationHeader(IUser user) {
-        String myCredentialsInBase64 = new BASE64Encoder().encode((user.getLogin() + ":" + user.getPassword().getValue()).getBytes());
+        return generateAuthorizationHeader(user.getLogin(), user.getPassword().getValue());
+    }
+
+    private String generateAuthorizationHeader(String login, String password) {
+        String myCredentialsInBase64 = new BASE64Encoder().encode((login + ":" + password).getBytes());
         return "Basic " + myCredentialsInBase64;
     }
 }

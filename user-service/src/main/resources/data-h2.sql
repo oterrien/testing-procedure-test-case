@@ -1,3 +1,4 @@
-insert into USERS (LOGIN, PASSWORD, "ROLE") values ('admin', 'password', 'ADMIN');
 
-insert into USERS (LOGIN, PASSWORD, "ROLE") values ('client', 'password', 'CLIENT');
+insert into USERS (LOGIN, PASSWORD, IS_ENCODED, ROLE) values ('admin', 'XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=', 1, 'ADMIN');
+
+insert into USERS (LOGIN, PASSWORD, IS_ENCODED, ROLE) values ('client', 'XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=', 1, 'CLIENT');
