@@ -1,6 +1,6 @@
 package com.test.infra.user.persistence;
 
-import com.test.domain.user.api.IPassword;
+import com.test.domain.user.api.model.IPassword;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

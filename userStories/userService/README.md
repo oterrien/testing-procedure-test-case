@@ -55,3 +55,9 @@ Now a user should be able to retrieve its own information
 *As a user<br>*
 *I want my password is checked<br>*
 *In order to check I have right to perform any action<br>*
+
+## User Story 9 : a user can have more than one role
+
+*As an admin<br>*
+*I want to add and remove many roles to users<br>*
+*In order to let them changing their role<br>*

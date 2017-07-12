@@ -1,4 +1,4 @@
 
-insert into USERS (LOGIN, PASSWORD, IS_ENCODED, ROLE) values ('admin', 'XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=', 1, 'ADMIN');
+insert into USERS (LOGIN, PASSWORD, IS_ENCODED) values ('root', 'XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=', 1);
 
-insert into USERS (LOGIN, PASSWORD, IS_ENCODED, ROLE) values ('client', 'XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=', 1, 'CLIENT');
+insert into USER_ROLES(ROLE, USER_ID) values('ADMIN', (select ID from USERS where LOGIN='root'));

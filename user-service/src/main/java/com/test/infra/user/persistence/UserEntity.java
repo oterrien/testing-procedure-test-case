@@ -1,19 +1,19 @@
 package com.test.infra.user.persistence;
 
-import com.test.domain.user.api.IPassword;
-import com.test.domain.user.api.IUser;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.test.domain.user.api.model.IPassword;
+import com.test.domain.user.api.model.IUser;
+import com.test.domain.user.api.model.Role;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
 @Table(name = "USERS")
 @NoArgsConstructor
-@AllArgsConstructor
 public class UserEntity implements IUser, Serializable {
 
     @Id
@@ -27,13 +27,16 @@ public class UserEntity implements IUser, Serializable {
     @Embedded
     private PasswordEntity password;
 
-    @Column(name = "ROLE", nullable=false)
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
     @Override
     public void setPassword(IPassword password) {
         this.password = (PasswordEntity)password;
+    }
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<RoleEntity> roleEntities;
+
+    public Set<Role> getRoles(){
+        return roleEntities.stream().map(RoleEntity::getRole).collect(Collectors.toSet());
     }
 }
 

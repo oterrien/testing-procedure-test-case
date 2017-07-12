@@ -3,8 +3,10 @@ package com.test.infra.user;
 import com.test.Application;
 import com.test.JSonUtils;
 import com.test.ScenarioContext;
-import com.test.domain.user.api.IUser;
+import com.test.domain.user.api.model.IUser;
+import com.test.domain.user.api.model.Role;
 import com.test.infra.user.persistence.PasswordEntity;
+import com.test.infra.user.persistence.RoleEntity;
 import com.test.infra.user.persistence.UserEntity;
 import com.test.infra.user.persistence.UserJpaRepository;
 import com.test.infra.user.rest.PasswordPayload;
@@ -19,6 +21,9 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,10 +40,11 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.test.JSonUtils.parseFromJson;
 import static com.test.JSonUtils.serializeToJson;
-import static com.test.domain.user.api.IUser.Role;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @ContextConfiguration(classes = Application.class)
@@ -81,8 +87,27 @@ public class StepDefinitions {
 
     //region GIVEN
     @Given("following users has been created")
-    public void givenTheFollowingUserHasBeenCreated(List<UserEntity> user) {
-        userJpaRepository.save(user);
+    public void givenTheFollowingUserHasBeenCreated(List<User> user) {
+
+        user.forEach(u -> {
+            UserEntity entity = new UserEntity();
+            entity.setId(u.getId());
+            entity.setLogin(u.getLogin());
+            entity.setPassword(new PasswordEntity(u.getPassword()));
+            entity.setRoleEntities(Stream.of(u.getRole().split(",")).distinct().map(p -> new RoleEntity(Role.valueOf(p), entity)).collect(Collectors.toSet()));
+            userJpaRepository.save(entity);
+        });
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public class User {
+
+        private int id;
+        private String login;
+        private String password;
+        private String role;
     }
 
     @Given("I am the user '(.*)'")
@@ -113,7 +138,7 @@ public class StepDefinitions {
         UserPayload userPayload = new UserPayload();
         userPayload.setLogin(UUID.randomUUID().toString());
         userPayload.setPassword(new PasswordPayload(UUID.randomUUID().toString()));
-        userPayload.setRole(userRole);
+        userPayload.getRoles().add(userRole);
 
         UserEntity me = scenarioContext.get("ME", UserEntity.class);
 

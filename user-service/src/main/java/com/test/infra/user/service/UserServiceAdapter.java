@@ -1,9 +1,10 @@
 package com.test.infra.user.service;
 
-import com.test.domain.user.api.IPassword;
-import com.test.domain.user.api.IUserService;
-import com.test.domain.user.api.NotAuthorizedException;
-import com.test.domain.user.api.UserServiceFactory;
+import com.test.domain.user.api.exception.NotAuthorizedException;
+import com.test.domain.user.api.factory.UserServiceFactory;
+import com.test.domain.user.api.model.IPassword;
+import com.test.domain.user.api.model.Role;
+import com.test.domain.user.api.service.IUserService;
 import com.test.infra.user.persistence.UserEntity;
 import com.test.infra.user.persistence.UserRepositoryServiceAdapter;
 import com.test.infra.user.rest.authentication.UserSessionProviderService;
@@ -67,5 +68,15 @@ public class UserServiceAdapter implements IUserService<UserEntity> {
     @Override
     public boolean isPasswordCorrect(int id, IPassword password) {
         return userService.isPasswordCorrect(id, password);
+    }
+
+    @Override
+    public void addRole(int id, Role role) {
+        userService.addRole(id, role);
+    }
+
+    @Override
+    public void removeRole(int id, Role role) {
+        userService.removeRole(id, role);
     }
 }

@@ -1,13 +1,15 @@
 package com.test.infra.user.rest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.test.domain.user.api.IUser;
+import com.test.domain.user.api.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -27,7 +29,7 @@ public class UserPayload {
     private PasswordPayload password;
 
     @JsonProperty
-    @NotNull
-    private IUser.Role role;
+    @NotEmpty
+    private Set<Role> roles = new HashSet<>();
 }
 

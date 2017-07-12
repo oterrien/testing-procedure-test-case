@@ -1,5 +1,6 @@
 package com.test.infra.user.rest;
 
+import com.test.domain.user.api.model.Role;
 import com.test.infra.user.persistence.UserEntity;
 import com.test.infra.user.service.UserServiceAdapter;
 import lombok.extern.slf4j.Slf4j;
@@ -74,5 +75,15 @@ public class UserRestController {
         return userService.isPasswordCorrect(id, userMapperService.convert(password));
     }
 
+    @RequestMapping(value = "/{id}/role", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
+    public void addRole(@PathVariable("id") int id, @RequestParam Role role) {
+        userService.addRole(id, role);
+    }
 
+    @RequestMapping(value = "/{id}/role", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.OK)
+    public void removeRole(@PathVariable("id") int id, @RequestParam Role role) {
+        userService.removeRole(id, role);
+    }
 }

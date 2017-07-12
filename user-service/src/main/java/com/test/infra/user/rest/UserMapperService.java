@@ -1,6 +1,7 @@
 package com.test.infra.user.rest;
 
 import com.test.infra.user.persistence.PasswordEntity;
+import com.test.infra.user.persistence.RoleEntity;
 import com.test.infra.user.persistence.UserEntity;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +32,7 @@ public class UserMapperService {
         payload.setId(entity.getId());
         payload.setLogin(entity.getLogin());
         payload.setPassword(convert(entity.getPassword()));
-        payload.setRole(entity.getRole());
+        payload.getRoles().addAll(entity.getRoles());
         return payload;
     }
 
@@ -48,7 +49,7 @@ public class UserMapperService {
         entity.setId(payload.getId());
         entity.setLogin(payload.getLogin());
         entity.setPassword(convert(payload.getPassword()));
-        entity.setRole(payload.getRole());
+        entity.setRoleEntities(payload.getRoles().stream().distinct().map(p -> new RoleEntity(p, entity)).collect(Collectors.toSet()));
         return entity;
     }
 

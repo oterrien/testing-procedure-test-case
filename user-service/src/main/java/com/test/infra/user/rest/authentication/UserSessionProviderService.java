@@ -1,6 +1,6 @@
 package com.test.infra.user.rest.authentication;
 
-import com.test.domain.user.api.IUser;
+import com.test.domain.user.api.model.IUser;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
