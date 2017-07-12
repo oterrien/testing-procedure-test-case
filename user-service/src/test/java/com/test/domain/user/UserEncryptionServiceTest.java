@@ -1,15 +1,13 @@
 package com.test.domain.user;
 
-import com.test.domain.user.api.*;
+import com.test.domain.user.api.IUser;
+import com.test.domain.user.api.IUserService;
+import com.test.domain.user.api.UserServiceFactory;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.Optional;
 
 public class UserEncryptionServiceTest {

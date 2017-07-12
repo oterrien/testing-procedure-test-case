@@ -4,7 +4,6 @@ import com.test.domain.user.api.IPassword;
 import com.test.domain.user.api.IUserService;
 import com.test.domain.user.api.NotAuthorizedException;
 import com.test.domain.user.api.UserServiceFactory;
-import com.test.domain.user.business.UserAuthorizationService;
 import com.test.infra.user.persistence.UserEntity;
 import com.test.infra.user.persistence.UserRepositoryServiceAdapter;
 import com.test.infra.user.rest.authentication.UserSessionProviderService;

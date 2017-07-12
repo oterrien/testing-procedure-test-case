@@ -2,7 +2,9 @@ package com.test.infra.user.persistence;
 
 import com.test.domain.user.api.IPassword;
 import com.test.domain.user.api.IUser;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
