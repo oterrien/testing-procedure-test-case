@@ -1,7 +1,7 @@
 logging:
   level:
     org.springframework.web: WARN
-    com.test: INFO
+    com.test: TRACE
 
 server:
   port: ${PORT:8080}
