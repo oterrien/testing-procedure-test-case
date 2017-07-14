@@ -26,10 +26,6 @@ public class UserRepositoryMock implements IUserRepository<User> {
         return users.values().stream().map(User::clone).collect(Collectors.toList());
     }
 
-    public int create(String login, String password, Role role) {
-        return create(new User(login, new User.Password(password), role));
-    }
-
     @Override
     public int create(User user) {
 

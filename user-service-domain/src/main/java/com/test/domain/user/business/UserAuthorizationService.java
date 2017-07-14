@@ -1,6 +1,6 @@
 package com.test.domain.user.business;
 
-import com.test.domain.user.api.exception.NotAuthorizedException;
+import com.test.domain.user.api.exception.UserActionNotAuthorizedException;
 import com.test.domain.user.api.model.IPassword;
 import com.test.domain.user.api.model.IUser;
 import com.test.domain.user.api.model.Role;
@@ -23,7 +23,7 @@ public class UserAuthorizationService<T extends IUser> implements IUserService<T
     public Optional<T> get(int id) {
 
         if (!currentUser.hasRole(Role.ADMIN) && currentUser.getId() != id) {
-            throw new NotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to retrieve user #" + id);
+            throw new UserActionNotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to retrieve user #" + id);
         }
 
         return userService.get(id);
@@ -42,7 +42,7 @@ public class UserAuthorizationService<T extends IUser> implements IUserService<T
     public int create(T user) {
 
         if (!currentUser.hasRole(Role.ADMIN)) {
-            throw new NotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to create a new user");
+            throw new UserActionNotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to create a new user");
         }
 
         return userService.create(user);
@@ -52,7 +52,7 @@ public class UserAuthorizationService<T extends IUser> implements IUserService<T
     public void update(int id, T user) {
 
         if (!currentUser.hasRole(Role.ADMIN)) {
-            throw new NotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to update the user #" + id);
+            throw new UserActionNotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to update the user #" + id);
         }
 
         userService.update(id, user);
@@ -62,7 +62,7 @@ public class UserAuthorizationService<T extends IUser> implements IUserService<T
     public void delete(int id) {
 
         if (!currentUser.hasRole(Role.ADMIN)) {
-            throw new NotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to delete the user #" + id);
+            throw new UserActionNotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to delete the user #" + id);
         }
 
         userService.delete(id);
@@ -72,7 +72,7 @@ public class UserAuthorizationService<T extends IUser> implements IUserService<T
     public void resetPassword(int id, IPassword newPassword) {
 
         if (!currentUser.hasRole(Role.ADMIN) && currentUser.getId() != id) {
-            throw new NotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to reset password of user #" + id);
+            throw new UserActionNotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to reset password of user #" + id);
         }
 
         userService.resetPassword(id, newPassword);
@@ -82,7 +82,7 @@ public class UserAuthorizationService<T extends IUser> implements IUserService<T
     public boolean isPasswordCorrect(int id, IPassword password) {
 
         if (!currentUser.hasRole(Role.ADMIN) && currentUser.getId() != id) {
-            throw new NotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to check password of user #" + id);
+            throw new UserActionNotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to check password of user #" + id);
         }
 
         return userService.isPasswordCorrect(id, password);
@@ -92,7 +92,7 @@ public class UserAuthorizationService<T extends IUser> implements IUserService<T
     public void addRole(int id, Role role) {
 
         if (!currentUser.hasRole(Role.ADMIN) && currentUser.getId() != id) {
-            throw new NotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to add any role to user #" + id);
+            throw new UserActionNotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to add any role to user #" + id);
         }
 
         userService.addRole(id, role);
@@ -102,7 +102,7 @@ public class UserAuthorizationService<T extends IUser> implements IUserService<T
     public void removeRole(int id, Role role) {
 
         if (!currentUser.hasRole(Role.ADMIN) && currentUser.getId() != id) {
-            throw new NotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to remove any role to user #" + id);
+            throw new UserActionNotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to remove any role to user #" + id);
         }
 
         userService.removeRole(id, role);

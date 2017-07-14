@@ -2,7 +2,7 @@ package com.test.domain.user.api.model;
 
 import java.util.Set;
 
-public interface IUser {
+public interface IUser extends Comparable<IUser> {
 
     int getId();
 
@@ -14,17 +14,17 @@ public interface IUser {
 
     void setPassword(IPassword password);
 
-    default boolean isSamePassword(IPassword password){
+    default boolean isSamePassword(IPassword password) {
         return getPassword().compareTo(password) == 0;
     }
 
     Set<Role> getRoles();
 
-    default void addRole(Role role){
+    default void addRole(Role role) {
         getRoles().add(role);
     }
 
-    default void removeRole(Role role){
+    default void removeRole(Role role) {
         getRoles().remove(role);
     }
 
@@ -32,5 +32,8 @@ public interface IUser {
         return getRoles().contains(role);
     }
 
+    @Override
+    default int compareTo(IUser o) {
+        return this.getLogin().compareTo(o.getLogin());
+    }
 }
-

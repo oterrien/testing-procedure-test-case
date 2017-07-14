@@ -1,6 +1,6 @@
 package com.test.domain.user;
 
-import com.test.domain.user.api.exception.NotAuthorizedException;
+import com.test.domain.user.api.exception.UserActionNotAuthorizedException;
 import com.test.domain.user.api.factory.UserServiceFactory;
 import com.test.domain.user.api.model.Role;
 import com.test.domain.user.api.service.IUserService;
@@ -8,7 +8,6 @@ import com.test.domain.user.business.UserService;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -62,7 +61,7 @@ public class UserServiceTest {
     }
 
     //US #1
-    @Test(expected = NotAuthorizedException.class)
+    @Test(expected = UserActionNotAuthorizedException.class)
     public void aNonAdminShouldNotBeAbleToCreateAUser() {
 
         User client = new User("aClient", new User.Password("hisPassword"), Role.CLIENT);
@@ -77,7 +76,7 @@ public class UserServiceTest {
     }
 
     //US #2
-    @Test(expected = NotAuthorizedException.class)
+    @Test(expected = UserActionNotAuthorizedException.class)
     public void aNonAdminShouldNotBoAbleToReadAnotherUser() {
 
         User client = new User("aClient", new User.Password("hisPassword"), Role.CLIENT);
@@ -156,7 +155,7 @@ public class UserServiceTest {
     }
 
     //US #3
-    @Test(expected = NotAuthorizedException.class)
+    @Test(expected = UserActionNotAuthorizedException.class)
     public void aNonAdminShouldNotBeAbleToUpdateAnyUser() {
 
         User client = new User("aClient", new User.Password("hisPassword"), Role.CLIENT);
@@ -190,7 +189,7 @@ public class UserServiceTest {
     }
 
     //US #4
-    @Test(expected = NotAuthorizedException.class)
+    @Test(expected = UserActionNotAuthorizedException.class)
     public void aUserShouldNotBeAbleToUpdateAnotherUserPassword() throws Exception {
 
         User client = new User("aClient", new User.Password("hisPassword"), Role.CLIENT);
@@ -219,7 +218,7 @@ public class UserServiceTest {
     }
 
     //US #5
-    @Test(expected = NotAuthorizedException.class)
+    @Test(expected = UserActionNotAuthorizedException.class)
     public void aNonAdminShouldNotBeAbleToDeleteAUser() throws Exception {
 
         User client = new User("aClient", new User.Password("hisPassword"), Role.CLIENT);
@@ -260,7 +259,7 @@ public class UserServiceTest {
         Assertions.assertThat(isCorrect).isFalse();
     }
 
-    @Test(expected = NotAuthorizedException.class)
+    @Test(expected = UserActionNotAuthorizedException.class)
     public void aUserShouldNotBeAbleToCheckPasswordOfAnotherUser() {
 
         User client = new User("aClient", new User.Password("hisPassword"), Role.CLIENT);
