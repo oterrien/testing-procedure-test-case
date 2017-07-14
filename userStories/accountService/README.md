@@ -34,7 +34,7 @@
 
 *As an advisor<br>*
 *I want to be able to make a deposit on any client's account<br>*
-*In order to help clients for their operation<br>*
+*In order to help clients for their operations<br>*
 
 ## User Story 4 : withdrawal
 
@@ -46,8 +46,8 @@
 :speech_balloon: a client should not be able to make deposit on another client's account
 
 *As an advisor<br>*
-*I want to be able to make a deposit on any client's account<br>*
-*In order to help clients for their operation<br>*
+*I want to be able to make a witdhrawal on any client's account<br>*
+*In order to help clients for their operations<br>*
 
 ## User Story 5 : operations
 
