@@ -1,6 +1,6 @@
 package com.test.infra.user.service;
 
-import com.test.domain.user.api.exception.NotAuthorizedException;
+import com.test.domain.user.api.exception.UserActionNotAuthorizedException;
 import com.test.domain.user.api.factory.UserServiceFactory;
 import com.test.domain.user.api.model.IPassword;
 import com.test.domain.user.api.model.Role;
@@ -30,7 +30,7 @@ public class UserServiceAdapter implements IUserService<UserEntity> {
                               @Autowired UserSessionProviderService<UserEntity> userSessionProviderService) {
 
         UserEntity currentUser = userSessionProviderService.getUser().
-                orElseThrow(() -> new NotAuthorizedException("No user in session"));
+                orElseThrow(() -> new UserActionNotAuthorizedException("No user in session"));
 
         userService = UserServiceFactory.getInstance().create(repositoryServiceAdapter, currentUser);
     }

@@ -1,7 +1,7 @@
 package com.test.infra.user.rest;
 
 import com.test.domain.user.api.exception.EncodedException;
-import com.test.domain.user.api.exception.NotAuthorizedException;
+import com.test.domain.user.api.exception.UserActionNotAuthorizedException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,10 +24,10 @@ public class UserRestControllerAdvice {
         return new Error(e.getMessage());
     }
 
-    @ExceptionHandler(NotAuthorizedException.class)
+    @ExceptionHandler(UserActionNotAuthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ResponseBody
-    public Error handle(NotAuthorizedException e) {
+    public Error handle(UserActionNotAuthorizedException e) {
         log.error(e.getMessage(), e);
         return new Error(e.getMessage());
     }

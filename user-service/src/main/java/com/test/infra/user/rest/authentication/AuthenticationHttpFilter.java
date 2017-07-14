@@ -1,7 +1,7 @@
 package com.test.infra.user.rest.authentication;
 
 import com.test.JSonUtils;
-import com.test.domain.user.api.exception.NotAuthorizedException;
+import com.test.domain.user.api.exception.UserActionNotAuthorizedException;
 import com.test.infra.user.persistence.PasswordEntity;
 import com.test.infra.user.persistence.UserEntity;
 import com.test.infra.user.persistence.UserJpaRepository;
@@ -57,7 +57,7 @@ public class AuthenticationHttpFilter implements Filter {
 
                     String[] baseAuth = new String(Base64.getDecoder().decode(authorization.get().replaceAll("Basic ", ""))).split(":");
                     if (baseAuth.length != 2) {
-                        throw new NotAuthorizedException("Bad credentials");
+                        throw new UserActionNotAuthorizedException("Bad credentials");
                     }
                     String login = baseAuth[0];
                     String password = baseAuth[1];
@@ -68,14 +68,14 @@ public class AuthenticationHttpFilter implements Filter {
                         sessionId = Optional.of(sessionProviderService.newSessionId());
                         sessionProviderService.put(sessionId.get(), user.get());
                     } else {
-                        throw new NotAuthorizedException("Bad credentials");
+                        throw new UserActionNotAuthorizedException("Bad credentials");
                     }
                 }
 
                 if (!sessionId.isPresent()) {
                     sessionId = Optional.ofNullable(httpServletRequest.getHeader("session-token"));
                     if (sessionId.isPresent() && !sessionProviderService.get(sessionId.get()).isPresent()) {
-                        throw new NotAuthorizedException("Invalid or obsolete 'session-token'");
+                        throw new UserActionNotAuthorizedException("Invalid or obsolete 'session-token'");
                     }
                 }
 
@@ -85,9 +85,9 @@ public class AuthenticationHttpFilter implements Filter {
                     sessionProviderService.renew(sessionId.get());
                     filterChain.doFilter(httpServletRequest, httpServletResponse);
                 } else {
-                    throw new NotAuthorizedException("Either 'Authorization' or 'session-token' are required");
+                    throw new UserActionNotAuthorizedException("Either 'Authorization' or 'session-token' are required");
                 }
-            } catch (NotAuthorizedException e) {
+            } catch (UserActionNotAuthorizedException e) {
 
                 httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
                 httpServletResponse.getWriter().write(JSonUtils.serializeToJson(new UserRestControllerAdvice.Error(e.getMessage())));
