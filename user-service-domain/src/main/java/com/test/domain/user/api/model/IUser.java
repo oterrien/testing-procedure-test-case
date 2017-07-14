@@ -22,6 +22,14 @@ public interface IUser {
 
     Set<Role> getRoles();
 
+    default void addRole(Role role){
+        getRoles().add(role);
+    }
+
+    default void removeRole(Role role){
+        getRoles().remove(role);
+    }
+
     default boolean hasRole(Role role) {
         return getRoles().contains(role);
     }

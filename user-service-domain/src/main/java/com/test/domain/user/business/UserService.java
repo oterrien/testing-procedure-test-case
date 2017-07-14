@@ -19,40 +19,49 @@ public class UserService<TU extends IUser> implements IUserService<TU> {
 
     @Override
     public Optional<TU> get(int id) {
-        if (log.isTraceEnabled()){
+        if (log.isTraceEnabled()) {
             log.trace("Finding the user {}", id);
         }
+
         return userRepository.find(id);
     }
 
     @Override
     public List<TU> getAll() {
-        if (log.isTraceEnabled()){
+        if (log.isTraceEnabled()) {
             log.trace("Finding all users");
         }
+
         return userRepository.findAll();
     }
 
     @Override
     public int create(TU user) {
-        if (log.isTraceEnabled()){
+        if (log.isTraceEnabled()) {
             log.trace("Creating a new user");
         }
-        return userRepository.create(user);
+
+        return Optional.ofNullable(user).
+                map(u -> userRepository.create(user)).
+                orElse(0);
     }
 
     @Override
     public void update(int id, TU user) {
-        if (log.isTraceEnabled()){
+        if (log.isTraceEnabled()) {
             log.trace("Updating the user {}", id);
         }
-        user.setId(id);
-        userRepository.update(id, user);
+
+        Optional.ofNullable(user).
+                ifPresent(u -> {
+                    user.setId(id);
+                    userRepository.update(id, user);
+                });
     }
 
     @Override
     public void delete(int id) {
-        if (log.isTraceEnabled()){
+        if (log.isTraceEnabled()) {
             log.trace("Deleting the user {}", id);
         }
         userRepository.delete(id);
@@ -60,9 +69,10 @@ public class UserService<TU extends IUser> implements IUserService<TU> {
 
     @Override
     public void resetPassword(int id, IPassword newPassword) {
-        if (log.isTraceEnabled()){
+        if (log.isTraceEnabled()) {
             log.trace("Resetting password of user {}", id);
         }
+
         get(id).ifPresent(u -> {
             u.setPassword(newPassword);
             update(id, u);
@@ -71,9 +81,10 @@ public class UserService<TU extends IUser> implements IUserService<TU> {
 
     @Override
     public boolean isPasswordCorrect(int id, IPassword password) {
-        if (log.isTraceEnabled()){
+        if (log.isTraceEnabled()) {
             log.trace("Checking password of user {}", id);
         }
+
         return get(id).
                 map(u -> u.isSamePassword(password)).
                 orElse(false);
@@ -81,27 +92,28 @@ public class UserService<TU extends IUser> implements IUserService<TU> {
 
     @Override
     public void addRole(int id, Role role) {
-        if (log.isTraceEnabled()){
+        if (log.isTraceEnabled()) {
             log.trace("Adding role to user {}", id);
         }
-        get(id).ifPresent(u -> {
-            if (!u.hasRole(role)) {
-                u.getRoles().add(role);
-                update(id, u);
-            }
-        });
+
+        get(id).filter(u -> !u.hasRole(role)).
+                ifPresent(u -> {
+                    u.addRole(role);
+                    update(id, u);
+
+                });
     }
 
     @Override
     public void removeRole(int id, Role role) {
-        if (log.isTraceEnabled()){
+        if (log.isTraceEnabled()) {
             log.trace("Removing role from user {}", id);
         }
-        get(id).ifPresent(u -> {
-            if (u.hasRole(role)) {
-                u.getRoles().remove(role);
-                update(id, u);
-            }
-        });
+
+        get(id).filter(u -> u.hasRole(role)).
+                ifPresent(u -> {
+                    u.removeRole(role);
+                    update(id, u);
+                });
     }
 }
