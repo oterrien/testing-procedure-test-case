@@ -10,6 +10,8 @@
 
 :speech_balloon: Account is linked to a single client and contain an account balance.
 
+:speech_balloon: only advisor should be able to create accounts
+
 ## User Story 2 : reading account
 
 *As an advisor<br>*
@@ -20,11 +22,19 @@
 *I want to read my account<br>*
 *In order to be aware of my account balance<br>*
 
+:speech_balloon: a client should not be able to read another client's account
+
 ## User Story 3 : deposit
 
 *As a client<br>*
 *I want to make a deposit on my account<br>*
 *In order to save money<br>*
+
+:speech_balloon: a client should not be able to make deposit on another client's account
+
+*As an advisor<br>*
+*I want to be able to make a deposit on any client's account<br>*
+*In order to help clients for their operation<br>*
 
 ## User Story 4 : withdrawal
 
@@ -33,6 +43,11 @@
 *In order to retrieve some or all of my savings<br>*
 
 :speech_balloon: If the result of account balance is negative, then the withdrawal is forbidden.
+:speech_balloon: a client should not be able to make deposit on another client's account
+
+*As an advisor<br>*
+*I want to be able to make a deposit on any client's account<br>*
+*In order to help clients for their operation<br>*
 
 ## User Story 5 : operations
 
