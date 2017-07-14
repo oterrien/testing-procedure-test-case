@@ -13,16 +13,23 @@ import java.util.Set;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class User implements IUser, Cloneable {
 
     private int id;
-    private String login;
+    private final String login;
     private IPassword password;
     private final Set<Role> roles = new HashSet<>();
 
+    public User(String login){
+        this.login = login;
+    }
+
+    public User(String login, String password, Role role, Role... otherRoles){
+        this(login, new Password(password, false), role, otherRoles);
+    }
+
     public User(String login, IPassword password, Role role, Role... otherRoles) {
-        setLogin(login);
+        this(login);
         setPassword(password);
         roles.add(role);
         if (otherRoles.length>0){
