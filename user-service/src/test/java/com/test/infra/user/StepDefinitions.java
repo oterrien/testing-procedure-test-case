@@ -1,10 +1,10 @@
 package com.test.infra.user;
 
-import com.test.Application;
-import com.test.JSonUtils;
 import com.test.ScenarioContext;
+import com.test.domain.common.JSonUtils;
 import com.test.domain.user.api.model.IUser;
 import com.test.domain.user.api.model.Role;
+import com.test.infra.UserServiceStarter;
 import com.test.infra.user.persistence.PasswordEntity;
 import com.test.infra.user.persistence.RoleEntity;
 import com.test.infra.user.persistence.UserEntity;
@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -48,8 +47,8 @@ import static com.test.JSonUtils.parseFromJson;
 import static com.test.JSonUtils.serializeToJson;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-@ContextConfiguration(classes = Application.class)
-@SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@ContextConfiguration(classes = UserServiceStarter.class)
+@SpringBootTest(classes = UserServiceStarter.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class StepDefinitions {
 
     private ScenarioContext scenarioContext = new ScenarioContext();

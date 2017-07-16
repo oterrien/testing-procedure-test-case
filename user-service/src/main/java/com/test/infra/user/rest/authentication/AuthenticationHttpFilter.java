@@ -1,6 +1,6 @@
 package com.test.infra.user.rest.authentication;
 
-import com.test.JSonUtils;
+import com.test.domain.common.JSonUtils;
 import com.test.domain.user.api.exception.UserActionNotAuthorizedException;
 import com.test.infra.user.persistence.PasswordEntity;
 import com.test.infra.user.persistence.UserEntity;

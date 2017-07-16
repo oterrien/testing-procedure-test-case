@@ -1,4 +1,4 @@
-package com.test;
+package com.test.domain.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
