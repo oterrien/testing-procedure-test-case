@@ -61,8 +61,7 @@
 
 :speech_balloon: When a client wants to make a withdrawal for which the resulting account balance would be negative, two rules have to be implemented:
 1. if the account balance result is negative, then overdraft charges (agios) are applied on the result. For this example, we will consider 10% of overdraft charges. 
-2. if this new result is greater than -1000, then 2 operations should be logged : withdrawal + overdraft charges
-3. if this new result is less than -1000, then the operation is forbidden
+2. if this new result is less than -1000, then the operation is forbidden
 
 ## User Story 6 : operations
 
@@ -71,4 +70,4 @@
 *In order to see history of my valid operations<br>*
 
 :warning: Forbidden operations are not audited.
-
+:speech_balloon: if this new result of withdrawal is negative and accepted, then 2 operations should be logged : withdrawal + overdraft charges
