@@ -49,14 +49,6 @@
 *I want to be able to make a witdhrawal on any client's account<br>*
 *In order to help clients for their operations<br>*
 
-## User Story 5 : operations
-
-*As a client<br>*
-*I want to see all my operations<br>*
-*In order to see history of my valid operations<br>*
-
-:warning: Forbidden operations are not audited.
-
 ## User Story 5 : overdraft
 
 *As an advisor<br>*
@@ -71,4 +63,12 @@
 1. if the account balance result is negative, then overdraft charges (agios) are applied on the result. For this example, we will consider 10% of overdraft charges. 
 2. if this new result is greater than -1000, then 2 operations should be logged : withdrawal + overdraft charges
 3. if this new result is less than -1000, then the operation is forbidden
+
+## User Story 6 : operations
+
+*As a client<br>*
+*I want to see all my operations<br>*
+*In order to see history of my valid operations<br>*
+
+:warning: Forbidden operations are not audited.
 
