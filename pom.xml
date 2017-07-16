@@ -14,6 +14,7 @@
         <module>common-lib-service</module>
         <module>user-service</module>
         <module>account-service</module>
+        <module>user-interface</module>
     </modules>
     <packaging>pom</packaging>    
 
