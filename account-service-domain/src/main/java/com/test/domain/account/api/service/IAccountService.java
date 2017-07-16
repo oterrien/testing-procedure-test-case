@@ -1,7 +1,7 @@
 package com.test.domain.account.api.service;
 
-import com.test.domain.account.api.exception.InsufficientRoleException;
 import com.test.domain.account.api.exception.AccountNotFoundException;
+import com.test.domain.account.api.exception.InsufficientRoleException;
 import com.test.domain.account.api.exception.OverdraftNotAuthorizedException;
 import com.test.domain.account.api.model.IAccount;
 
@@ -22,7 +22,7 @@ public interface IAccountService {
         makeDeposit(account.get(), amount);
     }
 
-    void makeDeposit(IAccount account, double amount) throws InsufficientRoleException, AccountNotFoundException;
+    void makeDeposit(IAccount account, double amount) throws InsufficientRoleException;
 
     default void makeWithdrawal(String accountNumber, double amount) throws InsufficientRoleException, AccountNotFoundException, OverdraftNotAuthorizedException {
 
@@ -33,5 +33,16 @@ public interface IAccountService {
         makeWithdrawal(account.get(), amount);
     }
 
-    void makeWithdrawal(IAccount account, double amount) throws InsufficientRoleException, AccountNotFoundException, OverdraftNotAuthorizedException;
+    void makeWithdrawal(IAccount account, double amount) throws InsufficientRoleException, OverdraftNotAuthorizedException;
+
+    default void setAgreedOverdraft(String accountNumber, double agreedOverdraft) throws InsufficientRoleException, AccountNotFoundException {
+
+        Optional<IAccount> account = get(accountNumber);
+        if (!account.isPresent()) {
+            throw new AccountNotFoundException(accountNumber);
+        }
+        setAgreedOverdraft(account.get(), agreedOverdraft);
+    }
+
+    void setAgreedOverdraft(IAccount account, double agreedOverdraft) throws InsufficientRoleException;
 }

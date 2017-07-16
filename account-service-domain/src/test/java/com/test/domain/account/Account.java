@@ -2,18 +2,17 @@ package com.test.domain.account;
 
 import com.test.domain.account.api.model.IAccount;
 import com.test.domain.user.api.model.IUser;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
 public class Account implements IAccount, Cloneable {
 
-    private String number;
     private final IUser owner;
+    private String number;
     private double balance = 0;
+    private double agreedOverdraft = 0;
 
     @Override
     protected IAccount clone() {

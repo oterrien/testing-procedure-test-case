@@ -124,7 +124,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void anAdvisorShouldBeAbleToMakeADepositOnClientAccount() throws Exception{
+    public void anAdvisorShouldBeAbleToMakeADepositOnClientAccount() throws Exception {
 
         IUser client = new User("client", "password", Role.CLIENT);
         Account account = new Account(client);
@@ -139,7 +139,7 @@ public class AccountServiceTest {
     }
 
     @Test(expected = InsufficientRoleException.class)
-    public void aClientShouldNotBeAbleToMakeADepositOnAnotherClientAccount() throws Exception{
+    public void aClientShouldNotBeAbleToMakeADepositOnAnotherClientAccount() throws Exception {
 
         IUser client1 = new User("client1", "password", Role.CLIENT);
 
@@ -156,7 +156,7 @@ public class AccountServiceTest {
 
     //region User Story 4 : withdrawal
     @Test
-    public void aClientShouldBeAbleToMakeAWithdrawalOnHisAccount() throws Exception{
+    public void aClientShouldBeAbleToMakeAWithdrawalOnHisAccount() throws Exception {
 
         IUser client = new User("client", "password", Role.CLIENT);
         Account account = new Account(client);
@@ -171,7 +171,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void anAdvisorShouldBeAbleToMakeAWithdrawalOnClientAccount() throws Exception{
+    public void aClientShouldBeAbleToMakeAWithdrawalOnClientAccount() throws Exception {
 
         IUser client = new User("client", "password", Role.CLIENT);
         Account account = new Account(client);
@@ -200,7 +200,6 @@ public class AccountServiceTest {
         Assertions.fail("Exception should be raised");
     }
 
-
     @Test(expected = OverdraftNotAuthorizedException.class)
     public void aClientShouldNotBeAbleToMakeAWithdrawalWhenResultingBalanceIsNegative() throws Exception {
 
@@ -212,6 +211,78 @@ public class AccountServiceTest {
         accountService.makeWithdrawal(accountNumber, 1000);
 
         Assertions.fail("Exception should be raised");
+    }
+    //endregion
+
+    //region User Story 5 : Agreed overdraft
+    @Test
+    public void anAdvisorShouldBeAbleToSetAgreedOverdraftForAnyClient() throws Exception {
+
+        IUser client = new User("client1", "password", Role.CLIENT);
+        Account account = new Account(client);
+        String accountNumber = accountRepositoryMock.create(account);
+
+        IAccountService accountService = AccountServiceFactory.getInstance().create(accountRepositoryMock, client);
+        accountService.setAgreedOverdraft(accountNumber, -1000);
+
+        Optional<IAccount> accountOptional = accountService.get(accountNumber);
+        Assertions.assertThat(accountOptional.get().getAgreedOverdraft()).isEqualTo(-1000);
+    }
+
+    @Test
+    public void aClientShouldBeAbleToSetAgreedOverdraftForHisOwnAccount() throws Exception {
+
+        IUser client = new User("client1", "password", Role.CLIENT);
+        Account account = new Account(client);
+        String accountNumber = accountRepositoryMock.create(account);
+
+        IAccountService accountService = AccountServiceFactory.getInstance().create(accountRepositoryMock, client);
+        accountService.setAgreedOverdraft(accountNumber, -1000);
+
+        Optional<IAccount> accountOptional = accountService.get(accountNumber);
+        Assertions.assertThat(accountOptional.get().getAgreedOverdraft()).isEqualTo(-1000);
+    }
+
+    @Test(expected = InsufficientRoleException.class)
+    public void aClientShouldNotBeAbleToSetAgreedOverdraftForAnotherClient() throws Exception {
+
+        IUser client1 = new User("client1", "password", Role.CLIENT);
+
+        IUser client2 = new User("client2", "password", Role.CLIENT);
+        Account account2 = new Account(client2);
+        String accountNumber2 = accountRepositoryMock.create(account2);
+
+        IAccountService accountService = AccountServiceFactory.getInstance().create(accountRepositoryMock, client1);
+        accountService.setAgreedOverdraft(accountNumber2, -1000);
+
+        Assertions.fail("Exception should be raised");
+    }
+
+    @Test
+    public void aClientShouldBeAbleToMakeAWithdrawalWhenResultIsGreaterThanAgreedOverdraft() throws Exception {
+
+        IUser client = new User("client1", "password", Role.CLIENT);
+        Account account = new Account(client);
+        account.setAgreedOverdraft(-1000);
+        String accountNumber = accountRepositoryMock.create(account);
+
+        IAccountService accountService = AccountServiceFactory.getInstance().create(accountRepositoryMock, client);
+        accountService.makeWithdrawal(accountNumber,909);
+
+        Optional<IAccount> accountOptional = accountService.get(accountNumber);
+        Assertions.assertThat(accountOptional.get().getBalance()).isEqualTo(-999.9);
+    }
+
+    @Test(expected = OverdraftNotAuthorizedException.class)
+    public void aClientShouldNotBeAbleToMakeAWithdrawalWhenResultIsLessThanAgreedOverdraft() throws Exception {
+
+        IUser client = new User("client1", "password", Role.CLIENT);
+        Account account = new Account(client);
+        account.setAgreedOverdraft(-1000);
+        String accountNumber = accountRepositoryMock.create(account);
+
+        IAccountService accountService = AccountServiceFactory.getInstance().create(accountRepositoryMock, client);
+        accountService.makeWithdrawal(accountNumber,910); // -1001
     }
     //endregion
 }

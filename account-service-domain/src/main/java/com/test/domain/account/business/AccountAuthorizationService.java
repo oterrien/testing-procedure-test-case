@@ -1,6 +1,5 @@
 package com.test.domain.account.business;
 
-import com.test.domain.account.api.exception.AccountNotFoundException;
 import com.test.domain.account.api.exception.InsufficientRoleException;
 import com.test.domain.account.api.exception.OverdraftNotAuthorizedException;
 import com.test.domain.account.api.model.IAccount;
@@ -43,7 +42,7 @@ public class AccountAuthorizationService implements IAccountService {
     }
 
     @Override
-    public void makeDeposit(IAccount account, double amount) throws InsufficientRoleException, AccountNotFoundException {
+    public void makeDeposit(IAccount account, double amount) throws InsufficientRoleException {
 
         if (!currentUser.hasRole(Role.ADVISOR) && !Optional.of(account).filter(acc -> acc.getOwner().compareTo(currentUser) == 0).isPresent()) {
             throw new InsufficientRoleException("User " + currentUser.getLogin() + " is not authorized to retrieve account #" + account.getNumber());
@@ -53,12 +52,23 @@ public class AccountAuthorizationService implements IAccountService {
     }
 
     @Override
-    public void makeWithdrawal(IAccount account, double amount) throws InsufficientRoleException, AccountNotFoundException, OverdraftNotAuthorizedException {
+    public void makeWithdrawal(IAccount account, double amount) throws InsufficientRoleException, OverdraftNotAuthorizedException {
 
         if (!currentUser.hasRole(Role.ADVISOR) && !Optional.of(account).filter(acc -> acc.getOwner().compareTo(currentUser) == 0).isPresent()) {
             throw new InsufficientRoleException("User " + currentUser.getLogin() + " is not authorized to retrieve account #" + account.getNumber());
         }
 
         accountService.makeWithdrawal(account, amount);
+    }
+
+    @Override
+    public void setAgreedOverdraft(IAccount account, double agreedOverdraft) throws InsufficientRoleException {
+
+        if (!currentUser.hasRole(Role.ADVISOR) && !Optional.of(account).filter(acc -> acc.getOwner().compareTo(currentUser) == 0).isPresent()) {
+            throw new InsufficientRoleException("User " + currentUser.getLogin() + " is not authorized to retrieve account #" + account.getNumber());
+        }
+
+        accountService.setAgreedOverdraft(account, agreedOverdraft);
+
     }
 }

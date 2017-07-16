@@ -35,11 +35,22 @@ public class AccountService implements IAccountService {
 
         double result = account.getBalance() - amount;
 
-        if (result < 0){
+        if (result < 0) {
+            result += result / 10;
+        }
+
+        if (result < account.getAgreedOverdraft()) {
             throw new OverdraftNotAuthorizedException(account.getNumber());
         }
 
         account.setBalance(result);
+        accountRepository.update(account.getNumber(), account);
+    }
+
+    @Override
+    public void setAgreedOverdraft(IAccount account, double agreedOverdraft) {
+
+        account.setAgreedOverdraft(agreedOverdraft);
         accountRepository.update(account.getNumber(), account);
     }
 }

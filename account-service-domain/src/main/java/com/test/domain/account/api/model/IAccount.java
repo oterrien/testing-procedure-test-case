@@ -2,8 +2,6 @@ package com.test.domain.account.api.model;
 
 import com.test.domain.user.api.model.IUser;
 
-import java.util.UUID;
-
 public interface IAccount {
 
     String getNumber();
@@ -13,4 +11,8 @@ public interface IAccount {
     double getBalance();
 
     void setBalance(double balance);
+
+    double getAgreedOverdraft();
+
+    void setAgreedOverdraft(double agreedOverdraft);
 }
