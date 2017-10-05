@@ -1,7 +1,7 @@
 package com.test.domain.account;
 
 import com.test.domain.account.api.model.IAccount;
-import com.test.domain.user.api.model.IUser;
+import com.test.domain.user.spi.IUser;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 

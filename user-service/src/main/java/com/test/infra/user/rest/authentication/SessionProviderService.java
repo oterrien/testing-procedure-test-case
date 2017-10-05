@@ -1,6 +1,6 @@
 package com.test.infra.user.rest.authentication;
 
-import com.test.domain.user.api.model.IUser;
+import com.test.domain.user.spi.IUser;
 import org.apache.commons.collections4.map.PassiveExpiringMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

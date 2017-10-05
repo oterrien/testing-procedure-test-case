@@ -4,7 +4,7 @@ import com.test.domain.account.api.service.IAccountService;
 import com.test.domain.account.business.AccountAuthorizationService;
 import com.test.domain.account.business.AccountService;
 import com.test.domain.account.spi.IAccountRepository;
-import com.test.domain.user.api.model.IUser;
+import com.test.domain.user.spi.IUser;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

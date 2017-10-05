@@ -1,10 +1,8 @@
-package com.test.domain.user.api.factory;
+package com.test.domain.user.business;
 
-import com.test.domain.user.api.model.IUser;
-import com.test.domain.user.api.service.IUserService;
-import com.test.domain.user.business.UserAuthorizationService;
-import com.test.domain.user.business.UserEncodingService;
-import com.test.domain.user.business.UserService;
+import com.test.domain.user.api.IUserService;
+import com.test.domain.user.api.UserServiceFactoryProvider;
+import com.test.domain.user.spi.IUser;
 import com.test.domain.user.spi.IUserRepository;
 import lombok.AccessLevel;
 import lombok.Getter;

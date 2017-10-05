@@ -2,7 +2,6 @@ package com.test.domain.account;
 
 import com.test.domain.account.api.model.IAccount;
 import com.test.domain.account.spi.IAccountRepository;
-import com.test.domain.user.api.model.IUser;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;

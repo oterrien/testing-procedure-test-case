@@ -1,6 +1,6 @@
 package com.test.domain.account.api.model;
 
-import com.test.domain.user.api.model.IUser;
+import com.test.domain.user.spi.IUser;
 
 public interface IAccount {
 

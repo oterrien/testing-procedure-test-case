@@ -1,6 +1,6 @@
-package com.test.domain.user.api.model;
+package com.test.domain.user.spi;
 
-import com.test.domain.user.api.exception.EncodedException;
+import com.test.domain.user.api.EncodedException;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

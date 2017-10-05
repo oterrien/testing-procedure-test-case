@@ -1,15 +1,15 @@
 package com.test.domain.user;
 
-import com.test.domain.user.api.model.IUser;
-import com.test.domain.user.api.model.Role;
-import com.test.domain.user.api.service.IUserService;
-import com.test.domain.user.api.factory.UserServiceFactory;
+import com.test.domain.user.api.IUserService;
+import com.test.domain.user.business.UserServiceFactory;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Optional;
+
+import static com.test.domain.user.spi.IUser.Role;
 
 public class UserEncryptionServiceTest {
 
@@ -18,7 +18,7 @@ public class UserEncryptionServiceTest {
 
     @Before
     public void setUp() {
-        int id = userRepositoryMock.create(admin);
+        long id = userRepositoryMock.create(admin);
         admin.setId(id);
     }
 

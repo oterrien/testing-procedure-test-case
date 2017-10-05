@@ -1,10 +1,9 @@
 package com.test.domain.user.business;
 
-import com.test.domain.user.api.exception.UserActionNotAuthorizedException;
-import com.test.domain.user.api.model.IPassword;
-import com.test.domain.user.api.model.IUser;
-import com.test.domain.user.api.model.Role;
-import com.test.domain.user.api.service.IUserService;
+import com.test.domain.user.api.UserActionNotAuthorizedException;
+import com.test.domain.user.spi.IPassword;
+import com.test.domain.user.spi.IUser;
+import com.test.domain.user.api.IUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,15 +11,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.test.domain.user.spi.IUser.Role;
+
 @RequiredArgsConstructor
 @Slf4j
-public class UserAuthorizationService<T extends IUser> implements IUserService<T> {
+class UserAuthorizationService<T extends IUser> implements IUserService<T> {
 
     private final IUserService<T> userService;
     private final T currentUser;
 
     @Override
-    public Optional<T> get(int id) {
+    public Optional<T> get(long id) {
 
         if (!currentUser.hasRole(Role.ADMIN) && currentUser.getId() != id) {
             throw new UserActionNotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to retrieve user #" + id);
@@ -39,7 +40,7 @@ public class UserAuthorizationService<T extends IUser> implements IUserService<T
     }
 
     @Override
-    public int create(T user) {
+    public long create(T user) {
 
         if (!currentUser.hasRole(Role.ADMIN)) {
             throw new UserActionNotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to create a new user");
@@ -49,7 +50,7 @@ public class UserAuthorizationService<T extends IUser> implements IUserService<T
     }
 
     @Override
-    public void update(int id, T user) {
+    public void update(long id, T user) {
 
         if (!currentUser.hasRole(Role.ADMIN)) {
             throw new UserActionNotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to update the user #" + id);
@@ -59,7 +60,7 @@ public class UserAuthorizationService<T extends IUser> implements IUserService<T
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(long id) {
 
         if (!currentUser.hasRole(Role.ADMIN)) {
             throw new UserActionNotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to delete the user #" + id);
@@ -69,7 +70,7 @@ public class UserAuthorizationService<T extends IUser> implements IUserService<T
     }
 
     @Override
-    public void resetPassword(int id, IPassword newPassword) {
+    public void resetPassword(long id, IPassword newPassword) {
 
         if (!currentUser.hasRole(Role.ADMIN) && currentUser.getId() != id) {
             throw new UserActionNotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to reset password of user #" + id);
@@ -79,7 +80,7 @@ public class UserAuthorizationService<T extends IUser> implements IUserService<T
     }
 
     @Override
-    public boolean isPasswordCorrect(int id, IPassword password) {
+    public boolean isPasswordCorrect(long id, IPassword password) {
 
         if (!currentUser.hasRole(Role.ADMIN) && currentUser.getId() != id) {
             throw new UserActionNotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to check password of user #" + id);
@@ -89,7 +90,7 @@ public class UserAuthorizationService<T extends IUser> implements IUserService<T
     }
 
     @Override
-    public void addRole(int id, Role role) {
+    public void addRole(long id, Role role) {
 
         if (!currentUser.hasRole(Role.ADMIN) && currentUser.getId() != id) {
             throw new UserActionNotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to add any role to user #" + id);
@@ -99,7 +100,7 @@ public class UserAuthorizationService<T extends IUser> implements IUserService<T
     }
 
     @Override
-    public void removeRole(int id, Role role) {
+    public void removeRole(long id, Role role) {
 
         if (!currentUser.hasRole(Role.ADMIN) && currentUser.getId() != id) {
             throw new UserActionNotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to remove any role to user #" + id);

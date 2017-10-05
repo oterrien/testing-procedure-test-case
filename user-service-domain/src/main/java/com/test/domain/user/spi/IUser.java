@@ -1,12 +1,12 @@
-package com.test.domain.user.api.model;
+package com.test.domain.user.spi;
 
 import java.util.Set;
 
 public interface IUser extends Comparable<IUser> {
 
-    int getId();
+    long getId();
 
-    void setId(int id);
+    void setId(long id);
 
     String getLogin();
 
@@ -35,5 +35,9 @@ public interface IUser extends Comparable<IUser> {
     @Override
     default int compareTo(IUser o) {
         return this.getLogin().compareTo(o.getLogin());
+    }
+
+    enum Role {
+        ADMIN, CLIENT, ADVISOR;
     }
 }

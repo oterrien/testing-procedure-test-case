@@ -1,10 +1,9 @@
 package com.test.infra.user.service;
 
-import com.test.domain.user.api.exception.UserActionNotAuthorizedException;
-import com.test.domain.user.api.factory.UserServiceFactory;
-import com.test.domain.user.api.model.IPassword;
-import com.test.domain.user.api.model.Role;
-import com.test.domain.user.api.service.IUserService;
+import com.test.domain.user.api.IUserService;
+import com.test.domain.user.api.UserActionNotAuthorizedException;
+import com.test.domain.user.business.UserServiceFactory;
+import com.test.domain.user.spi.IPassword;
 import com.test.infra.user.persistence.UserEntity;
 import com.test.infra.user.persistence.UserRepositoryServiceAdapter;
 import com.test.infra.user.rest.authentication.UserSessionProviderService;
@@ -18,9 +17,11 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.List;
 import java.util.Optional;
 
+import static com.test.domain.user.spi.IUser.Role;
+
 @Service
-@Scope(scopeName = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
 // This bean is instantiated for each new request
+@Scope(scopeName = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Slf4j
 public class UserServiceAdapter implements IUserService<UserEntity> {
 
@@ -36,7 +37,7 @@ public class UserServiceAdapter implements IUserService<UserEntity> {
     }
 
     @Override
-    public Optional<UserEntity> get(int id) {
+    public Optional<UserEntity> get(long id) {
         return userService.get(id);
     }
 
@@ -46,37 +47,38 @@ public class UserServiceAdapter implements IUserService<UserEntity> {
     }
 
     @Override
-    public int create(UserEntity user) {
+    public long create(UserEntity user) {
         return userService.create(user);
     }
 
     @Override
-    public void update(int id, UserEntity user) {
+    public void update(long id, UserEntity user) {
         userService.update(id, user);
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(long id) {
         userService.delete(id);
     }
 
     @Override
-    public void resetPassword(int id, IPassword newPassword) {
+    public void resetPassword(long id, IPassword newPassword) {
         userService.resetPassword(id, newPassword);
     }
 
     @Override
-    public boolean isPasswordCorrect(int id, IPassword password) {
+    public boolean isPasswordCorrect(long id, IPassword password) {
         return userService.isPasswordCorrect(id, password);
     }
 
     @Override
-    public void addRole(int id, Role role) {
+    public void addRole(long id, Role role) {
         userService.addRole(id, role);
     }
 
     @Override
-    public void removeRole(int id, Role role) {
+    public void removeRole(long id, Role role) {
         userService.removeRole(id, role);
     }
 }
+

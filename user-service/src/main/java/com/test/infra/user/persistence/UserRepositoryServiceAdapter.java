@@ -14,7 +14,7 @@ public class UserRepositoryServiceAdapter implements IUserRepository<UserEntity>
     private UserJpaRepository userJpaRepository;
 
     @Override
-    public Optional<UserEntity> find(int id) {
+    public Optional<UserEntity> find(long id) {
         return Optional.ofNullable(userJpaRepository.findOne(id));
     }
 
@@ -26,20 +26,20 @@ public class UserRepositoryServiceAdapter implements IUserRepository<UserEntity>
 
 
     @Override
-    public int create(UserEntity userEntity) {
+    public long create(UserEntity userEntity) {
 
         userEntity.setId(0);
         return userJpaRepository.save(userEntity).getId();
     }
 
     @Override
-    public void update(int id, UserEntity userEntity) {
+    public void update(long id, UserEntity userEntity) {
         userEntity.setId(id);
         userJpaRepository.save(userEntity);
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(long id) {
         find(id).ifPresent(p -> userJpaRepository.delete(p.getId()));
     }
 }

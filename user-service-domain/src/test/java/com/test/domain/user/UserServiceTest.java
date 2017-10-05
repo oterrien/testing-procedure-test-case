@@ -1,10 +1,9 @@
 package com.test.domain.user;
 
-import com.test.domain.user.api.exception.UserActionNotAuthorizedException;
-import com.test.domain.user.api.factory.UserServiceFactory;
-import com.test.domain.user.api.model.Role;
-import com.test.domain.user.api.service.IUserService;
-import com.test.domain.user.business.UserService;
+import com.test.domain.user.api.IUserService;
+import com.test.domain.user.api.UserActionNotAuthorizedException;
+import com.test.domain.user.api.UserServiceFactoryProvider;
+import com.test.domain.user.business.UserServiceFactory;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
@@ -13,6 +12,8 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Optional;
 
+import static com.test.domain.user.spi.IUser.Role;
+
 public class UserServiceTest {
 
     private final UserRepositoryMock userRepositoryMock = new UserRepositoryMock();
@@ -20,7 +21,7 @@ public class UserServiceTest {
 
     @Before
     public void setUp() {
-        int id = userRepositoryMock.create(admin);
+        long id = userRepositoryMock.create(admin);
         admin.setId(id);
     }
 
@@ -33,9 +34,9 @@ public class UserServiceTest {
     @Test
     public void aUserShouldBeAbleToBeCreated() {
 
-        IUserService<User> userService = new UserService<>(userRepositoryMock);
+        IUserService<User> userService = UserServiceFactoryProvider.getInstance().getUserServiceFactory().create(userRepositoryMock, admin);
 
-        int id = userService.create(this.admin);
+        long id = userService.create(this.admin);
         Assertions.assertThat(id).isPositive();
 
         Optional<User> user1 = userService.get(id);
@@ -52,7 +53,7 @@ public class UserServiceTest {
 
         User anotherUser = new User("anotherAdmin", new User.Password("hisPassword"), Role.ADMIN);
 
-        int id = userService.create(anotherUser);
+        long id = userService.create(anotherUser);
         Assertions.assertThat(id).isPositive();
 
         Optional<User> user1 = userService.get(id);

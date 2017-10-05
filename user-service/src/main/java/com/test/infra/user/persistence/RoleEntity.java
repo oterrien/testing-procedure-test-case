@@ -1,6 +1,5 @@
 package com.test.infra.user.persistence;
 
-import com.test.domain.user.api.model.Role;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -8,6 +7,8 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
+import static com.test.domain.user.spi.IUser.Role;
 
 @Data
 @EqualsAndHashCode(exclude = "user")

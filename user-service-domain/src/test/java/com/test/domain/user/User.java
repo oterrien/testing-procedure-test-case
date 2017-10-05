@@ -1,8 +1,7 @@
 package com.test.domain.user;
 
-import com.test.domain.user.api.model.IPassword;
-import com.test.domain.user.api.model.IUser;
-import com.test.domain.user.api.model.Role;
+import com.test.domain.user.spi.IPassword;
+import com.test.domain.user.spi.IUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class User implements IUser, Cloneable {
 
-    private int id;
+    private long id;
     private final String login;
     private IPassword password;
     private final Set<Role> roles = new HashSet<>();

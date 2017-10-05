@@ -7,12 +7,13 @@ import com.test.domain.account.api.model.IAccount;
 import com.test.domain.account.api.service.IAccountService;
 import com.test.domain.account.business.AccountService;
 import com.test.domain.user.User;
-import com.test.domain.user.api.model.IUser;
-import com.test.domain.user.api.model.Role;
+import com.test.domain.user.spi.IUser;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import java.util.Optional;
+
+import static com.test.domain.user.spi.IUser.Role;
 
 public class AccountServiceTest {
 
@@ -267,7 +268,7 @@ public class AccountServiceTest {
         String accountNumber = accountRepositoryMock.create(account);
 
         IAccountService accountService = AccountServiceFactory.getInstance().create(accountRepositoryMock, client);
-        accountService.makeWithdrawal(accountNumber,909);
+        accountService.makeWithdrawal(accountNumber, 909);
 
         Optional<IAccount> accountOptional = accountService.get(accountNumber);
         Assertions.assertThat(accountOptional.get().getBalance()).isEqualTo(-999.9);
@@ -282,7 +283,7 @@ public class AccountServiceTest {
         String accountNumber = accountRepositoryMock.create(account);
 
         IAccountService accountService = AccountServiceFactory.getInstance().create(accountRepositoryMock, client);
-        accountService.makeWithdrawal(accountNumber,910); // -1001
+        accountService.makeWithdrawal(accountNumber, 910); // -1001
     }
     //endregion
 }

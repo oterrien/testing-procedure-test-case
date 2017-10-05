@@ -1,7 +1,6 @@
 package com.test.infra.user.rest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.test.domain.user.api.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,13 +10,15 @@ import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.test.domain.user.spi.IUser.Role;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserPayload {
 
     @JsonProperty
-    private int id;
+    private long id;
 
     @JsonProperty
     @NotNull

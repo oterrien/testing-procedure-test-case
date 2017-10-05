@@ -2,8 +2,7 @@ package com.test.infra.user;
 
 import com.test.ScenarioContext;
 import com.test.domain.common.JSonUtils;
-import com.test.domain.user.api.model.IUser;
-import com.test.domain.user.api.model.Role;
+import com.test.domain.user.spi.IUser;
 import com.test.infra.UserServiceStarter;
 import com.test.infra.user.persistence.PasswordEntity;
 import com.test.infra.user.persistence.RoleEntity;
@@ -45,6 +44,7 @@ import java.util.stream.Stream;
 
 import static com.test.JSonUtils.parseFromJson;
 import static com.test.JSonUtils.serializeToJson;
+import static com.test.domain.user.spi.IUser.Role;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @ContextConfiguration(classes = UserServiceStarter.class)
@@ -104,7 +104,7 @@ public class StepDefinitions {
     @NoArgsConstructor
     public class User {
 
-        private int id;
+        private long id;
         private String login;
         private String password;
         private String role;
@@ -194,12 +194,12 @@ public class StepDefinitions {
                 ifPresent(u -> scenarioContext.put("FOUND_USER", u));
     }
 
-    private Optional<UserPayload> findAUserById(int id) throws Exception {
+    private Optional<UserPayload> findAUserById(long id) throws Exception {
         UserEntity me = scenarioContext.get("ME", UserEntity.class);
         return findAUserByIdAndCredentials(id, me.getLogin(), me.getPassword().getValue());
     }
 
-    private Optional<UserPayload> findAUserByIdAndCredentials(int id, String login, String password) throws Exception {
+    private Optional<UserPayload> findAUserByIdAndCredentials(long id, String login, String password) throws Exception {
 
         MvcResult result = mockMvc.perform(get("/api/v1/users/{id}", id).
                 header("Authorization", generateAuthorizationHeader(login, password)).
@@ -209,7 +209,7 @@ public class StepDefinitions {
         return readOperation(result);
     }
 
-    private Optional<UserPayload> findAUserByIdAndSessionToken(int id, String sessionToken) throws Exception {
+    private Optional<UserPayload> findAUserByIdAndSessionToken(long id, String sessionToken) throws Exception {
 
         MvcResult result = mockMvc.perform(get("/api/v1/users/{id}", id).
                 header("session-token", sessionToken).
@@ -421,7 +421,7 @@ public class StepDefinitions {
     @Then("this user should be created")
     public void thenUserIsCreate() throws Exception {
 
-        Integer createdUserId = scenarioContext.get("CREATED_USER_ID", Integer.class);
+        Long createdUserId = scenarioContext.get("CREATED_USER_ID", Long.class);
         Assertions.assertThat(findAUserById(createdUserId)).isPresent();
     }
 
@@ -433,14 +433,14 @@ public class StepDefinitions {
         Assertions.assertThat(errHttpStatus).isNotNull();
         Assertions.assertThat(errHttpStatus).isEqualByComparingTo(HttpStatus.NO_CONTENT);
 
-        Integer deletedUserId = scenarioContext.get("DELETED_USER_ID", Integer.class);
+        Long deletedUserId = scenarioContext.get("DELETED_USER_ID", Long.class);
         Assertions.assertThat(findAUserById(deletedUserId)).isEmpty();
     }
 
     @Then("the (.*) or this user should be updated")
     public void thenUserIsUpdated(String field) throws Throwable {
 
-        Integer updatedUserId = scenarioContext.get("UPDATED_USER_ID", Integer.class);
+        Long updatedUserId = scenarioContext.get("UPDATED_USER_ID", Long.class);
 
         Optional<UserPayload> userOpt = findAUserById(updatedUserId);
         if (userOpt.isPresent()) {
@@ -495,7 +495,7 @@ public class StepDefinitions {
     @Then("my password should be updated")
     public void thenMyPasswordShouldBeUpdated() throws Exception {
 
-        Integer updatedUserId = scenarioContext.get("UPDATED_USER_ID", Integer.class);
+        Long updatedUserId = scenarioContext.get("UPDATED_USER_ID", Long.class);
 
         Optional<UserPayload> userOpt = findAUserById(updatedUserId);
         if (userOpt.isPresent()) {

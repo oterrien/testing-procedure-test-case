@@ -1,7 +1,7 @@
 package com.test.infra.user.rest;
 
-import com.test.domain.user.api.exception.EncodedException;
-import com.test.domain.user.api.exception.UserActionNotAuthorizedException;
+import com.test.domain.user.api.EncodedException;
+import com.test.domain.user.api.UserActionNotAuthorizedException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

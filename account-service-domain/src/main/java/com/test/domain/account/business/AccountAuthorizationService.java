@@ -4,12 +4,13 @@ import com.test.domain.account.api.exception.InsufficientRoleException;
 import com.test.domain.account.api.exception.OverdraftNotAuthorizedException;
 import com.test.domain.account.api.model.IAccount;
 import com.test.domain.account.api.service.IAccountService;
-import com.test.domain.user.api.model.IUser;
-import com.test.domain.user.api.model.Role;
+import com.test.domain.user.spi.IUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
+
+import static com.test.domain.user.spi.IUser.Role;
 
 @RequiredArgsConstructor
 @Slf4j

@@ -1,8 +1,7 @@
 package com.test.infra.user.persistence;
 
-import com.test.domain.user.api.model.IPassword;
-import com.test.domain.user.api.model.IUser;
-import com.test.domain.user.api.model.Role;
+import com.test.domain.user.spi.IPassword;
+import com.test.domain.user.spi.IUser;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,7 +18,7 @@ public class UserEntity implements IUser, Serializable {
     @Id
     @GeneratedValue
     @Column(name = "ID")
-    private int id;
+    private long id;
 
     @Column(name = "LOGIN", unique = true, nullable=false)
     private String login;

@@ -1,6 +1,5 @@
 package com.test.infra.user.rest;
 
-import com.test.domain.user.api.model.Role;
 import com.test.infra.user.persistence.UserEntity;
 import com.test.infra.user.service.UserServiceAdapter;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+
+import static com.test.domain.user.spi.IUser.Role;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -30,7 +31,7 @@ public class UserRestController {
     @ResponseBody
     public UserPayload create(@Valid @RequestBody UserPayload userPayload) {
         UserEntity userEntity = userMapperService.convert(userPayload);
-        int id = userService.create(userEntity);
+        long id = userService.create(userEntity);
         return userMapperService.convert(userService.get(id));
     }
 
