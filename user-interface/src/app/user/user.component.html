@@ -1,0 +1,18 @@
+<div *ngIf="user">
+  <div class="container body">
+    <form class="form">
+      <h2 class="form-signin-heading">{{user.login}}</h2>
+      <label for="inputPassword">Password</label>
+      <input id="inputPassword" class="form-control" [value]="user.password.value" required>
+      <label>Roles</label>
+      <table class="table table-striped" *ngIf='user.roles && user.roles.length'>
+        <tbody>
+        <tr *ngFor="let role of user.roles">
+          <td>{{role}}</td>
+        </tr>
+        </tbody>
+      </table>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Save</button>
+    </form>
+  </div>
+</div>

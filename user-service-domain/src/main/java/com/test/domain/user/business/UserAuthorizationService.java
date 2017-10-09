@@ -1,9 +1,9 @@
 package com.test.domain.user.business;
 
+import com.test.domain.user.api.IUserService;
 import com.test.domain.user.api.UserActionNotAuthorizedException;
 import com.test.domain.user.spi.IPassword;
 import com.test.domain.user.spi.IUser;
-import com.test.domain.user.api.IUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -92,7 +92,7 @@ class UserAuthorizationService<T extends IUser> implements IUserService<T> {
     @Override
     public void addRole(long id, Role role) {
 
-        if (!currentUser.hasRole(Role.ADMIN) && currentUser.getId() != id) {
+        if (!currentUser.hasRole(Role.ADMIN)) {
             throw new UserActionNotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to add any role to user #" + id);
         }
 
@@ -102,7 +102,7 @@ class UserAuthorizationService<T extends IUser> implements IUserService<T> {
     @Override
     public void removeRole(long id, Role role) {
 
-        if (!currentUser.hasRole(Role.ADMIN) && currentUser.getId() != id) {
+        if (!currentUser.hasRole(Role.ADMIN)) {
             throw new UserActionNotAuthorizedException("User " + currentUser.getLogin() + " is not authorized to remove any role to user #" + id);
         }
 
