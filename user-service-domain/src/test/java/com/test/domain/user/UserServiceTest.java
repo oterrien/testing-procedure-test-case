@@ -7,6 +7,7 @@ import com.test.domain.user.business.UserServiceFactory;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -275,6 +276,7 @@ public class UserServiceTest {
         Assertions.fail("NotAuthorizedException should be raised");
     }
 
+    @Ignore
     @Test
     public void anAdminCanAddMoreThanOneRoleToAnotherUser() {
 

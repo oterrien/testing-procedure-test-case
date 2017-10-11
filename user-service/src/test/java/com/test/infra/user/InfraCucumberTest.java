@@ -8,8 +8,9 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         features = "src/test/resources/features/infra/user",
         glue = "com.test.infra.user",
-        tags = {"@Infra", "~@Ignore"/*, "@SessionUser", "@CreateUser", "@UpdateUser", "@DeleteUser", "@ReadUser", "@ResetPassword", "@CheckPassword"*/})
+        //tag = {"@Infra", "~@Ignore"}
+        tags = {/*"@UserSession", */"@CreateUser"/*, "@UpdateUser", "@DeleteUser", "@ReadUser", "@ResetPassword", "@CheckPassword"*/},
+        format = "tzatziki.analysis.exec.gson.JsonEmitterReport:target")
 public class InfraCucumberTest {
-
 
 }
