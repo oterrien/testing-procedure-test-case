@@ -1,5 +1,6 @@
-/.idea
-**/target
-**/*.iml
+.idea
+target
+*.iml
 **/angular/build
 **/angular/node_modules
+**.log
